@@ -1,0 +1,2591 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+<title>آزمون‌ساز کاغذی (حضوری)</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d3b66">
+<style>
+  :root{
+    --navy:#0d3b66; --navy-dark:#082a4d; --navy-light:#1e6fa8;
+    --bg:#f3f7fb; --card:#ffffff; --border:#dbe4ec; --text:#1c2b36; --muted:#5c7284;
+    --danger:#c0392b; --success:#1f8a56; --warn:#b7791f;
+    --radius:10px;
+  }
+  html[data-theme="dark"]{
+    --navy:#1e6fa8; --navy-dark:#123252; --navy-light:#2f8cd0;
+    --bg:#121821; --card:#1b232f; --border:#2c3949; --text:#e6edf5; --muted:#93a3b5;
+    --danger:#e05c4c; --success:#3cb877; --warn:#d9a441;
+  }
+  html[data-theme="dark"] body{ background:var(--bg); color:var(--text); }
+  html[data-theme="dark"] input, html[data-theme="dark"] textarea, html[data-theme="dark"] select{
+    background:#0f151d; color:var(--text); border-color:var(--border);
+  }
+  html[data-theme="dark"] .field-box{ background:#161e28; }
+  html[data-theme="dark"] table.qtable th{ background:#1e2836; }
+  html[data-theme="dark"] .badge{ background:#1e2836; }
+  html[data-theme="dark"] button.secondary{ background:var(--card); }
+  html[data-theme="dark"] .pill{ background:var(--card); }
+  html[data-theme="dark"] #headerGridWrap, html[data-theme="dark"] #designTableWrap{ background:#0f151d; }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:Vazirmatn,Tahoma,'Segoe UI',sans-serif;
+    background:var(--bg); color:var(--text); direction:rtl;
+    -webkit-tap-highlight-color:transparent;
+  }
+  input,textarea,select,button{font-family:inherit; font-size:15px;}
+  input,textarea,select{
+    width:100%; padding:10px 12px; border:1px solid var(--border); border-radius:8px;
+    background:#fff; color:var(--text); min-height:44px;
+  }
+  textarea{min-height:80px; resize:vertical;}
+  button{
+    cursor:pointer; border:none; border-radius:8px; padding:10px 16px; min-height:44px;
+    background:var(--navy); color:#fff; font-weight:600; transition:.15s;
+  }
+  button:hover{background:var(--navy-light);}
+  button.secondary{background:#fff; color:var(--navy); border:1px solid var(--navy);}
+  button.secondary:hover{background:#eaf2f8;}
+  button.danger{background:var(--danger);}
+  button.danger:hover{background:#e0473a;}
+  button.ghost{background:transparent; color:var(--navy); box-shadow:none; padding:6px 8px; min-height:36px;}
+  button:disabled{opacity:.5; cursor:not-allowed;}
+  label{display:block; font-size:13px; color:var(--muted); margin-bottom:4px; font-weight:600;}
+  .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-bottom:14px; box-shadow:0 1px 3px rgba(13,59,102,.06);}
+  .row{display:flex; gap:10px; flex-wrap:wrap;}
+  .row > *{flex:1; min-width:160px;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:10px;}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr;}}
+  h1,h2,h3{color:var(--navy-dark); margin:0 0 10px;}
+  h2{font-size:19px; border-bottom:2px solid var(--navy); padding-bottom:8px;}
+  .topbar{
+    background:var(--navy); position:sticky; top:0; z-index:50; display:flex; overflow-x:auto;
+    box-shadow:0 2px 6px rgba(0,0,0,.15);
+  }
+  .topbar button.tab{
+    background:transparent; color:#cfe0ee; border-radius:0; white-space:nowrap; font-weight:600;
+    padding:14px 16px; border-bottom:3px solid transparent;
+  }
+  .topbar button.tab.active{color:#fff; border-bottom:3px solid #ffffff; background:var(--navy-dark);}
+  .brand{color:#fff; font-weight:800; padding:14px 18px; white-space:nowrap;}
+  main{max-width:1000px; margin:0 auto; padding:16px; padding-bottom:80px;}
+  .view{display:none;}
+  .view.active{display:block;}
+  table.qtable{width:100%; border-collapse:collapse; margin-top:10px;}
+  table.qtable th, table.qtable td{border:1px solid var(--border); padding:8px; text-align:right; vertical-align:top;}
+  table.qtable th{background:#eaf2f8; color:var(--navy-dark); font-size:13px;}
+  table.qtable td.col-num{width:40px; text-align:center; font-weight:700;}
+  table.qtable td.col-score{width:90px;}
+  table.qtable td.col-ans{width:150px; font-size:13px;}
+  table.qtable td.col-actions{width:110px;}
+  #headerFieldsContainer{display:grid; grid-template-columns:repeat(3, 1fr); gap:10px;}
+  @media(max-width:820px){ #headerFieldsContainer{grid-template-columns:repeat(2, 1fr);} }
+  @media(max-width:520px){ #headerFieldsContainer{grid-template-columns:1fr;} }
+  .field-box{border:1px solid var(--border); border-radius:8px; padding:10px; background:#fbfdff; display:flex; flex-direction:column; gap:6px;}
+  .field-box .grow{flex:1; min-width:0;}
+  .field-box .fb-actions{display:flex; gap:4px; justify-content:flex-end;}
+  .badge{display:inline-block; background:#eaf2f8; color:var(--navy); border-radius:6px; padding:2px 8px; font-size:12px; font-weight:700;}
+  .hr-sep{border:none; border-top:1px dashed var(--border); margin:16px 0;}
+  .toast{position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--navy-dark); color:#fff; padding:10px 18px; border-radius:20px; font-size:14px; z-index:999; box-shadow:0 4px 12px rgba(0,0,0,.2); opacity:0; transition:.25s;}
+  .toast.show{opacity:1;}
+  .pill-group{display:flex; gap:6px; flex-wrap:wrap;}
+  .pill{padding:8px 14px; border-radius:20px; border:1px solid var(--navy); background:#fff; color:var(--navy); cursor:pointer; font-size:13px; font-weight:600; min-height:auto;}
+  .pill.on{background:var(--navy); color:#fff;}
+  .tf-btns{display:flex; gap:10px;}
+  .tf-btns button{flex:1;}
+  .tf-btns button.selected{background:var(--success);}
+  .modal-bg{position:fixed; inset:0; background:rgba(8,20,32,.55); display:none; align-items:center; justify-content:center; z-index:200; padding:16px;}
+  .modal-bg.show{display:flex;}
+  .modal-box{background:#fff; border-radius:12px; max-width:700px; width:100%; max-height:85vh; overflow:auto; padding:20px;}
+  .small{font-size:12px; color:var(--muted);}
+  .actions-bar{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px;}
+  .timer{font-weight:800; font-size:20px; color:var(--danger); background:#fff; border:2px solid var(--danger); border-radius:10px; padding:8px 14px; display:inline-block;}
+  .print-table{border-collapse:collapse; width:100%;}
+  .print-table td, .print-table th{border:1px solid #333; padding:6px;}
+  .qnum-circle{display:inline-block; width:26px; height:26px; border-radius:50%; background:var(--navy); color:#fff; text-align:center; line-height:26px; font-size:13px; margin-left:6px;}
+  .empty-hint{color:var(--muted); text-align:center; padding:30px 10px; border:2px dashed var(--border); border-radius:10px;}
+
+  .scrollNav{ position:fixed; bottom:20px; left:16px; z-index:90; display:flex; flex-direction:column; gap:8px; }
+  .scrollNav button{ width:46px; height:46px; min-height:auto; border-radius:50%; padding:0; font-size:19px; line-height:1;
+    display:flex; align-items:center; justify-content:center; box-shadow:0 2px 10px rgba(0,0,0,.28); }
+</style>
+</head>
+<body>
+
+<div id="app">
+  <nav class="topbar" id="topbar">
+    <span class="brand">📝 آزمون‌ساز کاغذی</span>
+    <button class="tab active" data-view="questions">سوالات</button>
+    <button class="tab" data-view="design">طراحی جدول و سربرگ</button>
+    <button class="tab" data-view="export">خروجی</button>
+    <button class="tab" data-view="bank">بانک سوالات</button>
+    <button class="tab" data-view="utils">ابزار / راهنما</button>
+    <button id="btnToggleTheme" title="تغییر تم" style="margin-right:auto; background:transparent; color:#cfe0ee; border:none; padding:14px 16px; cursor:pointer; font-size:16px;">🌙</button>
+  </nav>
+
+  <main id="views">
+
+    <!-- ===================== QUESTIONS VIEW ===================== -->
+    <section class="view active" id="view-questions">
+      <div class="card">
+        <h2>طراحی سوال جدید</h2>
+        <div class="row">
+          <div>
+            <label>نوع سوال</label>
+            <select id="qType" autocomplete="off">
+              <option value="tf">صحیح / غلط</option>
+              <option value="blank">جای خالی</option>
+              <option value="paren">گزینه مناسب در پرانتز</option>
+              <option value="mc4">چهارگزینه‌ای</option>
+              <option value="match">وصل کنید</option>
+              <option value="essay">تشریحی</option>
+            </select>
+          </div>
+          <div>
+            <label>بارم</label>
+            <select id="qScore" autocomplete="off"></select>
+          </div>
+          <div>
+            <label>ارتفاع کادر پاسخ (mm) — خالی = پیش‌فرض</label>
+            <input type="number" id="qAnswerBoxHeight" min="0" step="1" autocomplete="off" placeholder="مثلاً 25">
+            <p class="small" id="qAnswerBoxHeightHint" style="margin-top:4px;"></p>
+          </div>
+        </div>
+        <div id="qBuilderBody"></div>
+        <div class="actions-bar">
+          <button id="btnSaveQuestion">💾 ذخیره سوال</button>
+          <button id="btnResetBuilder" class="secondary">پاک کردن فرم</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>فهرست سوالات (<span id="qCount">0</span>)</h2>
+        <div class="actions-bar">
+          <button id="btnAddSection" class="secondary">🏷️ افزودن برچسب بخش (مثلاً «بخش ۱: صحیح/غلط»)</button>
+          <button id="btnNewExam" class="ghost danger" style="color:#c0392b;">🆕 آزمون جدید</button>
+        </div>
+        <input type="text" id="qSearchBox" autocomplete="off" placeholder="🔍 جستجو در متن سوالات، گزینه‌ها یا پاسخ‌ها..." style="margin-top:8px;">
+        <div id="questionsTableWrap"></div>
+      </div>
+    </section>
+
+    <!-- ===================== DESIGN VIEW ===================== -->
+    <section class="view" id="view-design">
+      <div class="card">
+        <h2>سربرگ آماده (تصویر) — به‌جای طراحی</h2>
+        <p class="small">اگه از قبل یک سربرگ توی Word یا هر برنامهٔ دیگه آماده دارید، همون صفحه رو به‌صورت عکس (اسکرین‌شات یا Save as Picture) بگیرید و اینجا آپلود کنید — دیگه لازم نیست از صفر بسازیدش.</p>
+        <input type="file" id="headerImageInput" accept="image/*" autocomplete="off">
+        <div id="headerImagePreviewBox" style="margin-top:10px; display:none;">
+          <img id="headerImagePreview" style="max-width:100%; max-height:200px; border:1px solid var(--border); border-radius:8px;">
+          <div class="actions-bar" style="margin-top:8px;">
+            <label style="display:flex; gap:6px; align-items:center; font-weight:600; color:var(--text);">
+              <input type="checkbox" id="useHeaderImageToggle" style="width:auto; min-height:auto;"> استفاده از این تصویر به‌جای سربرگ زیر
+            </label>
+            <button id="btnRemoveHeaderImage" class="ghost danger" style="color:#c0392b;">✕ حذف تصویر</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>سربرگ ساده (فیلد به فیلد)</h2>
+        <p class="small">هر چند فیلد که بخواهید اضافه کنید، هر ترتیبی که خواستید بچینید، و نوعش را خودتان انتخاب کنید.</p>
+        <div class="row" style="align-items:center; margin-bottom:10px;">
+          <label style="flex:none; margin-left:8px;">تعداد فیلد در هر ردیف خروجی چاپی</label>
+          <select id="headerFieldsPerRowSelect" autocomplete="off" style="max-width:100px;">
+            <option value="1">۱</option><option value="2">۲</option><option value="3">۳</option><option value="4">۴</option>
+          </select>
+        </div>
+        <div id="headerFieldsContainer"></div>
+        <div class="actions-bar" style="align-items:center;">
+          <select id="newFieldType" autocomplete="off" style="max-width:160px;">
+            <option value="text">متنی</option>
+            <option value="number">عددی</option>
+            <option value="date">تاریخ (شمسی)</option>
+          </select>
+          <button id="btnAddField" class="secondary">➕ افزودن فیلد دلخواه</button>
+          <button id="btnClearHeaderFields" class="ghost danger" style="color:#c0392b;">🗑 پاک‌کردن کامل سربرگ</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>سربرگ آزاد (طراحی جدولی مثل Word)</h2>
+        <p class="small">اگه به‌جای فیلد ساده می‌خواید خودتان آزادانه یک جدول بسازید (با ادغام خانه‌ها و...)، این را روشن کنید. روی هر خانه کلیک کنید و مستقیم تایپ کنید. برای تقسیم‌کردن یک خانه به چند بخش (مثلاً یک ردیف را به دو ستون تقسیم کنید بدون اینکه ردیف‌های دیگر تغییر کنند)، روی آن خانه کلیک کنید و «🔀 تقسیم این خانه به چند بخش» را بزنید.</p>
+        <label style="display:flex; gap:6px; align-items:center; font-weight:600; color:var(--text); margin-bottom:10px;">
+          <input type="checkbox" id="useHeaderGridToggle" style="width:auto; min-height:auto;"> استفاده از این جدول آزاد به‌جای سربرگ سادهٔ بالا
+        </label>
+        <div id="headerGridWrap" style="overflow-x:auto; border:1px solid var(--border); border-radius:8px; padding:10px; background:#fff;"></div>
+        <div class="actions-bar" style="margin-top:10px;">
+          <button id="btnAddHeaderRow" class="secondary">➕ افزودن ردیف</button>
+          <button id="btnRemoveHeaderRow" class="secondary">➖ حذف آخرین ردیف</button>
+          <button id="btnAddHeaderCol" class="secondary">➕ افزودن ستون</button>
+          <button id="btnRemoveHeaderCol" class="secondary">➖ حذف آخرین ستون</button>
+          <button id="btnHeaderMergeMode" class="secondary">🔲 حالت انتخاب برای ادغام</button>
+          <button id="btnHeaderMerge">🔗 ادغام خانه‌های انتخاب‌شده</button>
+          <button id="btnHeaderSplitParts" class="secondary">🔀 تقسیم این خانه به چند بخش</button>
+          <button id="btnHeaderSplit" class="secondary">✂️ جداسازی (بازگردانی ادغام قبلی)</button>
+        </div>
+        <p class="small" id="headerGridHint"></p>
+      </div>
+
+      <div class="card">
+        <h2>طراحی جدول سوالات (مثل محیط Word)</h2>
+        <p class="small">روی مرز بین ستون‌ها بکشید تا عرضشون تغییر کنه. روی هر ستون بزنید تا فونت، اندازه و رنگش رو تنظیم کنید.</p>
+        <div class="actions-bar">
+          <button id="btnApplySampleStyle" class="secondary">📐 اعمال قالب دقیقاً مثل نمونهٔ شما (ساده و مشکی)</button>
+          <button id="btnApplyCompactMode" class="secondary">📄 حالت فشرده (کمترین مصرف کاغذ)</button>
+        </div>
+        <hr class="hr-sep">
+        <div id="designTableWrap" style="overflow-x:auto; border:1px solid var(--border); border-radius:8px; padding:10px; background:#fff;"></div>
+        <div class="actions-bar" style="margin-top:10px;">
+          <button id="btnAddQCol" class="secondary">➕ افزودن ستون سفارشی</button>
+          <button id="btnRemoveQCol" class="secondary">➖ حذف آخرین ستون سفارشی</button>
+        </div>
+      </div>
+
+      <div class="card" id="colPanelCard" style="display:none;">
+        <h2>تنظیمات ستون: <span id="colPanelTitle"></span></h2>
+        <div class="grid2">
+          <div>
+            <label>عنوان ستون</label>
+            <input type="text" id="cpLabel" autocomplete="off">
+          </div>
+          <div>
+            <label>نوع فونت</label>
+            <select id="cpFont" autocomplete="off">
+              <option value="Vazirmatn">Vazirmatn (پیشنهادی — انگلیسی و فارسی هم‌وزن)</option>
+              <option value="Tahoma">Tahoma</option>
+              <option value="Arial">Arial</option>
+              <option value="IRANSans">IRANSans</option>
+              <option value="B Nazanin">B Nazanin</option>
+              <option value="B Titr">B Titr</option>
+              <option value="B Yekan">B Yekan</option>
+              <option value="Nazanin">Nazanin</option>
+              <option value="Mitra">Mitra</option>
+              <option value="Koodak">Koodak</option>
+              <option value="Times New Roman">Times New Roman</option>
+            </select>
+          </div>
+          <div>
+            <label>اندازهٔ فونت (px)</label>
+            <input type="number" id="cpSize" min="8" max="36" step="1" autocomplete="off">
+          </div>
+          <div>
+            <label>تراز متن</label>
+            <select id="cpAlign" autocomplete="off">
+              <option value="right">راست</option>
+              <option value="center">وسط</option>
+              <option value="left">چپ</option>
+            </select>
+          </div>
+          <div>
+            <label>رنگ متن</label>
+            <input type="color" id="cpColor" autocomplete="off">
+          </div>
+          <div>
+            <label>رنگ پس‌زمینه</label>
+            <input type="color" id="cpBg" autocomplete="off">
+          </div>
+          <div style="display:flex; align-items:flex-end;">
+            <label style="display:flex; gap:6px; align-items:center; font-weight:600; color:var(--text);">
+              <input type="checkbox" id="cpBold" style="width:auto; min-height:auto;"> ضخیم (Bold)
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>تنظیمات کلی جدول</h2>
+        <div class="grid2">
+          <div>
+            <label>رنگ کادر جدول</label>
+            <input type="color" id="dsBorderColor" autocomplete="off">
+          </div>
+          <div>
+            <label>ضخامت کادر (px)</label>
+            <input type="number" id="dsBorderWidth" min="1" max="4" step="1" autocomplete="off">
+          </div>
+          <div>
+            <label>حداقل ارتفاع سطر سوال (mm)</label>
+            <input type="number" id="dsRowHeight" min="5" max="80" step="1" autocomplete="off">
+          </div>
+          <div>
+            <label>فاصلهٔ داخلی خانه‌ها — حاشیهٔ متن تا کادر (mm)</label>
+            <input type="number" id="dsCellPadding" min="0" max="15" step="0.5" autocomplete="off">
+          </div>
+          <div>
+            <label>اندازهٔ کاغذ چاپ</label>
+            <select id="dsPageSize" autocomplete="off">
+              <option value="A4">A4</option>
+              <option value="A5">A5</option>
+            </select>
+          </div>
+          <div>
+            <label>حاشیهٔ صفحه در چاپ (mm)</label>
+            <input type="number" id="dsPageMargin" min="0" max="40" step="1" autocomplete="off">
+          </div>
+          <div>
+            <label>فاصلهٔ بین سطرهای سوالات (mm)</label>
+            <input type="number" id="dsRowSpacing" min="0" max="30" step="1" autocomplete="off">
+          </div>
+          <div style="display:flex; align-items:flex-end;">
+            <label style="display:flex; gap:6px; align-items:center; font-weight:600; color:var(--text);">
+              <input type="checkbox" id="dsShowAnswerCol" style="width:auto; min-height:auto;"> نمایش ستون جداگانه برای «پاسخ»
+            </label>
+          </div>
+          <div style="display:flex; align-items:flex-end;">
+            <label style="display:flex; gap:6px; align-items:center; font-weight:600; color:var(--text);">
+              <input type="checkbox" id="dsShowPageFooter" style="width:auto; min-height:auto;"> نمایش نام دانش‌آموز + شماره صفحه در پایین هر صفحهٔ چاپ‌شده
+            </label>
+          </div>
+        </div>
+        <hr class="hr-sep">
+        <h3>فونت جدول سربرگ</h3>
+        <div class="grid2">
+          <div>
+            <label>نوع فونت سربرگ</label>
+            <select id="hfFont" autocomplete="off">
+              <option value="Vazirmatn">Vazirmatn (پیشنهادی — انگلیسی و فارسی هم‌وزن)</option>
+              <option value="Tahoma">Tahoma</option>
+              <option value="Arial">Arial</option>
+              <option value="IRANSans">IRANSans</option>
+              <option value="B Nazanin">B Nazanin</option>
+              <option value="B Titr">B Titr</option>
+              <option value="B Yekan">B Yekan</option>
+              <option value="Nazanin">Nazanin</option>
+              <option value="Mitra">Mitra</option>
+              <option value="Koodak">Koodak</option>
+              <option value="Times New Roman">Times New Roman</option>
+            </select>
+          </div>
+          <div>
+            <label>اندازهٔ فونت سربرگ (px)</label>
+            <input type="number" id="hfSize" min="8" max="36" step="1" autocomplete="off">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>ذخیرهٔ طرح‌های دلخواه</h2>
+        <div class="actions-bar">
+          <button id="btnSaveTemplate">💾 ذخیره طرح فعلی با یک اسم</button>
+          <button id="btnResetTemplate" class="secondary">↺ بازگشت به طرح پیش‌فرض</button>
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <div>
+            <label>طرح‌های ذخیره‌شده</label>
+            <select id="templateSelect" autocomplete="off"><option value="">— هیچ‌کدام —</option></select>
+          </div>
+          <div style="display:flex; align-items:flex-end; gap:6px;">
+            <button id="btnLoadTemplate" class="secondary">بارگذاری</button>
+            <button id="btnRenameTemplate" class="secondary">✏️ تغییر نام</button>
+            <button id="btnDuplicateTemplate" class="secondary">📋 کپی طرح</button>
+            <button id="btnDeleteTemplate" class="ghost danger" style="color:#c0392b;">حذف</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== EXPORT VIEW ===================== -->
+    <section class="view" id="view-export">
+      <div class="card">
+        <h2>خروجی PDF / Word</h2>
+        <p class="small">هر دو خروجی دقیقاً یک جدول‌بندی یکسان دارند، مطابق طرحی که در تب «طراحی جدول» ساختید.</p>
+        <div class="actions-bar">
+          <button id="btnPreview" class="secondary">👁 پیش‌نمایش</button>
+          <button id="btnPdfNoAns">📄 PDF بدون پاسخ</button>
+          <button id="btnPdfAns">📄 PDF با پاسخ</button>
+          <button id="btnDocNoAns">📝 Word بدون پاسخ</button>
+          <button id="btnDocAns">📝 Word با پاسخ</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== BANK VIEW ===================== -->
+    <section class="view" id="view-bank">
+      <div class="card">
+        <h2>بانک سوالات</h2>
+        <div class="row">
+          <div>
+            <label>جستجو در متن سوال</label>
+            <input type="text" id="bankSearchText" autocomplete="off">
+          </div>
+          <div>
+            <label>درس</label>
+            <select id="bankSearchSubject" autocomplete="off"><option value="">همهٔ درس‌ها</option></select>
+          </div>
+          <div>
+            <label>نوع سوال</label>
+            <select id="bankSearchType" autocomplete="off">
+              <option value="">همه</option>
+              <option value="tf">صحیح/غلط</option>
+              <option value="blank">جای خالی</option>
+              <option value="paren">پرانتزی</option>
+              <option value="mc4">چهارگزینه‌ای</option>
+              <option value="match">وصل کنید</option>
+              <option value="essay">تشریحی</option>
+            </select>
+          </div>
+        </div>
+        <div id="bankList" style="margin-top:12px;"></div>
+      </div>
+    </section>
+
+    <!-- ===================== UTILS VIEW ===================== -->
+    <section class="view" id="view-utils">
+      <div class="card">
+        <h2>کپی/پیست انبوه سوالات</h2>
+        <p class="small">هر سوال را در یک خط یا با یک خط خالی از هم جدا کنید. خط‌هایی که «___» (جای خالی) داشته باشند به‌صورت خودکار سوال «جای خالی» می‌شوند، خط‌هایی با گزینه‌های داخل پرانتز مثل «(الف/ب/ج)» به‌صورت خودکار سوال «پرانتزی» می‌شوند، و بقیه به‌صورت سوال «تشریحی» اضافه می‌شوند. برای سوالات جای‌خالی و پرانتزی، پاسخ صحیح را باید بعداً در فهرست سوالات خودتان مشخص کنید.</p>
+        <textarea id="bulkPasteArea" rows="6" autocomplete="off" placeholder="سوال اول...&#10;سوال دوم..."></textarea>
+        <div class="actions-bar">
+          <button id="btnBulkConvert">تبدیل به سوالات</button>
+          <label class="secondary" style="display:inline-flex; align-items:center; padding:10px 16px; border:1px solid var(--navy); border-radius:8px; color:var(--navy); cursor:pointer;">
+            📄 آپلود فایل Word (docx.)
+            <input type="file" id="fileWordUpload" accept=".docx" style="display:none;" autocomplete="off">
+          </label>
+        </div>
+        <p class="small">با آپلود یک فایل Word (فقط پسوند docx.)، متن هر پاراگراف آن (هر سوال معمولاً یک پاراگراف) در جعبهٔ بالا ریخته می‌شود تا پیش از تبدیل، آن را مرور و در صورت نیاز اصلاح کنید. جدول‌ها و تصاویر داخل فایل Word پشتیبانی نمی‌شوند و فایل فقط در همین مرورگر شما پردازش می‌شود (به هیچ سروری فرستاده نمی‌شود).</p>
+      </div>
+
+      <div class="card">
+        <h2>ذخیرهٔ کل آزمون (پروژه‌ها)</h2>
+        <p class="small">کل آزمون (سربرگ، سوالات، طرح جدول) را با یک اسم ذخیره کنید تا بعداً بارگذاری کنید.</p>
+        <div class="actions-bar">
+          <button id="btnSaveProject" class="secondary">💾 ذخیرهٔ کل آزمون با یک اسم</button>
+        </div>
+        <div class="row" style="margin-top:10px;">
+          <div>
+            <label>آزمون‌های ذخیره‌شده</label>
+            <select id="projectSelect" autocomplete="off"><option value="">— هیچ‌کدام —</option></select>
+          </div>
+          <div style="display:flex; align-items:flex-end; gap:6px;">
+            <button id="btnLoadProject" class="secondary">بارگذاری</button>
+            <button id="btnDeleteProject" class="ghost danger" style="color:#c0392b;">حذف</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>پشتیبان‌گیری و بازیابی</h2>
+        <div class="actions-bar">
+          <button id="btnBackupJson" class="secondary">⬇️ دریافت پشتیبان JSON</button>
+          <label class="secondary" style="display:inline-flex; align-items:center; padding:10px 16px; border:1px solid var(--navy); border-radius:8px; color:var(--navy); cursor:pointer;">
+            ⬆️ بازیابی از JSON
+            <input type="file" id="fileRestore" accept="application/json" style="display:none;" autocomplete="off">
+          </label>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>فضای ذخیره‌سازی مرورگر</h2>
+        <p class="small">همهٔ اطلاعات این برنامه (آزمون فعلی، بانک سوالات، پروژه‌ها، قالب‌ها) داخل حافظهٔ همین مرورگر ذخیره می‌شود که ظرفیت محدودی دارد (معمولاً چند مگابایت). اگر این نوار پر شود، ذخیره‌سازی ممکن است ناموفق شود؛ در آن صورت یک پشتیبان JSON بگیرید و چند مورد قدیمی (از بانک سوالات یا پروژه‌ها) را پاک کنید.</p>
+        <div style="background:var(--bg); border:1px solid var(--border); border-radius:8px; height:16px; overflow:hidden; margin-top:8px;">
+          <div id="storageUsageBar" style="height:100%; width:0%; background:var(--success); transition:width .3s;"></div>
+        </div>
+        <p class="small" id="storageUsageText" style="margin-top:6px;"></p>
+      </div>
+
+      <div class="card">
+        <h2>تنظیمات پیش‌فرض</h2>
+        <div class="row">
+          <div>
+            <label>بارم پیش‌فرض سوال جدید</label>
+            <select id="defaultScoreSetting" autocomplete="off"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>راهنمای برنامه</h2>
+        <ol class="small" style="line-height:2;">
+          <li>در تب «سوالات» هر سوال را طراحی و «ذخیره سوال» را بزنید. برای گذاشتن چند سوال هم‌نوع کنار هم بدون خط جداکننده، بعد از ذخیرهٔ اولی، دکمهٔ «➕🔗» را در فهرست سوالات بزنید.</li>
+          <li>در تب «طراحی جدول و سربرگ»، ابتدا سربرگ را مثل یک جدول Word بسازید (افزودن ردیف/ستون، ادغام یا جداسازی خانه‌ها)، سپس ظاهر جدول سوالات (فونت، رنگ، عرض ستون‌ها) را تنظیم کنید.</li>
+          <li>در تب «خروجی» فایل PDF یا Word بگیرید (روی کاغذ A4) و برای آزمون حضوری پرینت کنید.</li>
+          <li>از تب «ابزار / راهنما»، کل آزمون را می‌توانید با یک اسم ذخیره کنید تا بعداً دوباره بارگذاری کنید.</li>
+        </ol>
+      </div>
+    </section>
+
+  </main>
+  <div class="scrollNav" id="scrollNav">
+    <button type="button" id="btnScrollTop" title="برو به بالای صفحه (طراحی سوال)" aria-label="برو به بالای صفحه">⬆</button>
+    <button type="button" id="btnScrollBottom" title="برو به پایین صفحه (آخر فهرست)" aria-label="برو به پایین صفحه">⬇</button>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalBg"><div class="modal-box" id="modalBox"></div></div>
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+/* ============ PERSIAN (FARSI) DIGITS EVERYWHERE ============
+   Converts any 0-9 digit appearing in the app's own rendered text to the
+   Persian-Arabic equivalent (۰۱۲۳۴۵۶۷۸۹) — question numbers, scores, counts,
+   percentages, dates, the storage bar, everything on screen. This only
+   rewrites actual on-screen text (DOM text nodes); it never touches form
+   field values, element ids/attributes, or CSS, so nothing about how the
+   app calculates, saves, or exports anything changes — people can still
+   type ordinary digits into any box exactly as before.
+   A couple of ids are deliberately skipped because they hold codes that
+   must round-trip byte-for-byte (a student's result code, meant to be
+   copied and pasted back in later, or the embedded exam-data payload). */
+const FA_DIGITS = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+const FA_SKIP_IDS = new Set(['resultCodeText','examDataEmbed']);
+function toFaText(s){ return s.replace(/[0-9]/g, d => FA_DIGITS[d]); }
+function faShouldSkip(el){
+  return el.nodeType===1 && (el.tagName==='SCRIPT' || el.tagName==='STYLE' || FA_SKIP_IDS.has(el.id));
+}
+function faWalk(node){
+  if(node.nodeType===3){
+    if(/[0-9]/.test(node.nodeValue)) node.nodeValue = toFaText(node.nodeValue);
+    return;
+  }
+  if(node.nodeType!==1 || faShouldSkip(node)) return;
+  for(let child=node.firstChild; child; child=child.nextSibling) faWalk(child);
+}
+// Converts digits to Persian inside a standalone HTML string (used for the
+// PDF/Word export and the print preview) that never gets inserted into the
+// live page — parses it in an offline document, walks it with the exact same
+// safe text-node-only logic, then serializes it back out.
+function toFaHtmlString(htmlStr){
+  try{
+    const doc = new DOMParser().parseFromString(htmlStr, 'text/html');
+    faWalk(doc.documentElement);
+    return '<!DOCTYPE html>\n' + doc.documentElement.outerHTML;
+  }catch(e){ return htmlStr; }
+}
+(function(){
+  function start(){
+    const roots = ['app','studentApp','modalBg','toast']
+      .map(id=>document.getElementById(id)).filter(Boolean);
+    roots.forEach(faWalk);
+    const observer = new MutationObserver(muts=>{
+      for(const m of muts){
+        if(m.type==='childList'){
+          m.addedNodes.forEach(n=>{ if(!(n.nodeType===1 && faShouldSkip(n))) faWalk(n); });
+        } else if(m.type==='characterData'){
+          const p = m.target.parentNode;
+          if(p && faShouldSkip(p)) continue;
+          if(/[0-9]/.test(m.target.nodeValue)) m.target.nodeValue = toFaText(m.target.nodeValue);
+        }
+      }
+    });
+    roots.forEach(root=> observer.observe(root, {childList:true, subtree:true, characterData:true}));
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', start); else start();
+})();
+
+
+/* ============ FLOATING SCROLL-TO-TOP / SCROLL-TO-BOTTOM BUTTONS ============
+   Handy once the question list gets long (e.g. 40+ questions) — jump straight
+   to the builder at the top of the page, or straight to the end of the list,
+   instead of scrolling through everything by hand. */
+(function(){
+  const btnTop = document.getElementById('btnScrollTop');
+  const btnBottom = document.getElementById('btnScrollBottom');
+  if(btnTop) btnTop.addEventListener('click', ()=>{ window.scrollTo({top:0, behavior:'smooth'}); });
+  if(btnBottom) btnBottom.addEventListener('click', ()=>{ window.scrollTo({top:document.body.scrollHeight, behavior:'smooth'}); });
+})();
+
+
+/* ============ APP STORAGE (IndexedDB-backed, localStorage-shaped) ============
+   Every save that used to go straight into localStorage (draft, question bank,
+   published exams, results, saved projects...) now goes through this instead.
+   From every call site's point of view it behaves exactly like localStorage —
+   getItem/setItem/removeItem/key/length, all synchronous — but underneath it's
+   backed by IndexedDB, whose storage quota is dramatically larger than
+   localStorage's (commonly hundreds of MB up to a few GB, vs. ~5-10MB).
+   A small in-memory cache is what makes the synchronous-looking API possible:
+   it's loaded once from IndexedDB before the app boots (AppStorage.ready()),
+   every read after that is served straight from the cache, and every write
+   updates the cache immediately and persists to IndexedDB in the background.
+   If IndexedDB isn't available at all (very old or locked-down browsers),
+   this transparently falls back to real localStorage so the app keeps
+   working, just with the original smaller quota. */
+const AppStorage = (function(){
+  const DB_NAME = 'examBuilderDB', STORE = 'kv';
+  let db = null, cache = new Map(), fallback = false, quota = 200*1024*1024;
+  let readyPromise = null, errNotified = false;
+
+  function openDb(){
+    return new Promise((resolve,reject)=>{
+      if(!('indexedDB' in window)){ reject(new Error('no indexedDB')); return; }
+      const req = indexedDB.open(DB_NAME, 1);
+      req.onupgradeneeded = ()=>{ req.result.createObjectStore(STORE); };
+      req.onsuccess = ()=> resolve(req.result);
+      req.onerror = ()=> reject(req.error);
+    });
+  }
+  function loadAll(){
+    return new Promise((resolve)=>{
+      try{
+        const tx = db.transaction(STORE,'readonly');
+        const req = tx.objectStore(STORE).openCursor();
+        req.onsuccess = (e)=>{
+          const cur = e.target.result;
+          if(cur){ cache.set(cur.key, cur.value); cur.continue(); } else resolve();
+        };
+        req.onerror = ()=> resolve();
+      }catch(e){ resolve(); }
+    });
+  }
+  function persistAllNow(){
+    return new Promise((resolve)=>{
+      if(!db){ resolve(); return; }
+      try{
+        const tx = db.transaction(STORE,'readwrite');
+        const store = tx.objectStore(STORE);
+        cache.forEach((v,k)=> store.put(v,k));
+        tx.oncomplete = ()=>resolve(); tx.onerror = ()=>resolve();
+      }catch(e){ resolve(); }
+    });
+  }
+  function migrateFromOldLocalStorage(){
+    // One-time move of anything saved by an older, localStorage-only version
+    // of this exact app, so this update never loses an existing draft/bank/
+    // results. A marker key keeps this from re-scanning on every load.
+    try{
+      if(cache.get('__migratedFromLocalStorage__')==='1') return Promise.resolve();
+      let found = false;
+      for(let i=0;i<localStorage.length;i++){
+        const k = localStorage.key(i);
+        if(k==null || cache.has(k)) continue;
+        const v = localStorage.getItem(k);
+        if(v!=null){ cache.set(k, v); found = true; }
+      }
+      cache.set('__migratedFromLocalStorage__','1');
+      return found ? persistAllNow() : Promise.resolve();
+    }catch(e){ return Promise.resolve(); }
+  }
+  function notifyError(){
+    if(errNotified) return; errNotified = true;
+    try{ if(typeof toast==='function') toast('⚠️ ذخیره‌سازی ناموفق بود؛ ممکن است فضای ذخیره‌سازی دستگاه پر باشد.'); }catch(e){}
+    setTimeout(()=>{ errNotified=false; }, 5000);
+  }
+  function persist(key, value){
+    if(!db) return; // not ready yet (very early write) — cache already has it, disk catch-up isn't critical here
+    try{
+      const tx = db.transaction(STORE,'readwrite');
+      if(value===null) tx.objectStore(STORE).delete(key); else tx.objectStore(STORE).put(value, key);
+      tx.onerror = ()=> notifyError();
+    }catch(e){ notifyError(); }
+  }
+  async function init(){
+    try{
+      db = await openDb();
+      await loadAll();
+      await migrateFromOldLocalStorage();
+      if(navigator.storage && navigator.storage.estimate){
+        try{ const est = await navigator.storage.estimate(); if(est && est.quota) quota = est.quota; }catch(e){}
+      }
+    }catch(e){
+      fallback = true; // IndexedDB unavailable — transparently use real localStorage instead
+    }
+  }
+  return {
+    ready(){ if(!readyPromise) readyPromise = init(); return readyPromise; },
+    getItem(key){
+      if(fallback){ try{ return localStorage.getItem(key); }catch(e){ return null; } }
+      return cache.has(key) ? cache.get(key) : null;
+    },
+    setItem(key, value){
+      const v = String(value);
+      if(fallback){ try{ localStorage.setItem(key, v); }catch(e){ notifyError(); } return; }
+      cache.set(key, v); persist(key, v);
+    },
+    removeItem(key){
+      if(fallback){ try{ localStorage.removeItem(key); }catch(e){} return; }
+      cache.delete(key); persist(key, null);
+    },
+    key(i){ if(fallback) return localStorage.key(i); return Array.from(cache.keys())[i]; },
+    get length(){ return fallback ? localStorage.length : cache.size; },
+    get quotaBytes(){ return quota; },
+    get isFallback(){ return fallback; }
+  };
+})();
+
+
+/* ============ UTIL ============ */
+function uid(){ return 'q'+Date.now()+Math.random().toString(36).slice(2,7); }
+function el(html){ const t=document.createElement('template'); t.innerHTML=html.trim(); return t.content.firstElementChild; }
+function toast(msg){ const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show'); clearTimeout(toast._h); toast._h=setTimeout(()=>t.classList.remove('show'),2200); }
+// Word's (and, less often, a browser's) bidi engine mirrors "(" / ")" glyphs
+// based on the resolved text direction of the characters around them. When a
+// parenthesis sits right next to a Latin letter/word inside an RTL Persian
+// sentence (e.g. "لایه C (جوان‌ترین لایه)"), that resolution can go wrong and
+// the parenthesis displays mirrored/backwards in Word. Wrapping every "(" and
+// ")" with an invisible Right-to-Left Mark (U+200F) forces them to resolve as
+// part of the surrounding RTL run, which fixes the mirroring without changing
+// anything visible.
+function fixBidiParens(s){
+  if(s==null) return '';
+  return String(s).replace(/\(/g, '\u200F(').replace(/\)/g, ')\u200F');
+}
+function esc(s){ return fixBidiParens(s==null?'':String(s)).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+const PERSIAN_DIGITS = ['۰','۱','۲','۳','۴','۵','۶','۷','۸','۹'];
+function toFa(n){ return String(n).replace(/[0-9]/g, d => PERSIAN_DIGITS[d]); }
+function scoreOptions(selected){
+  let out=''; for(let v=0.25; v<=10.0001; v+=0.25){ const n=Math.round(v*100)/100; out+=`<option value="${n}" ${selected==n?'selected':''}>${n}</option>`; }
+  return out;
+}
+function download(filename, content, mime){
+  const blob = new Blob([content], {type:mime});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+// Resizes/re-encodes an uploaded image (photos from a phone camera can be several
+// MB) down to a reasonable size before it gets base64-encoded into localStorage
+// or the exported exam file. Keeps exports lighter and avoids filling up the
+// browser's limited localStorage quota after a handful of images.
+function compressImageFile(file, maxDim=1400, quality=0.82){
+  return new Promise((resolve, reject)=>{
+    const reader = new FileReader();
+    reader.onload = ()=>{
+      const img = new Image();
+      img.onload = ()=>{
+        let {width, height} = img;
+        if(width > maxDim || height > maxDim){
+          if(width >= height){ height = Math.round(height * maxDim / width); width = maxDim; }
+          else { width = Math.round(width * maxDim / height); height = maxDim; }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width; canvas.height = height;
+        canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+        resolve(canvas.toDataURL('image/jpeg', quality));
+      };
+      img.onerror = ()=> reject(new Error('این فایل به‌عنوان تصویر خوانده نشد.'));
+      img.src = reader.result;
+    };
+    reader.onerror = ()=> reject(new Error('خواندن فایل تصویر با خطا مواجه شد.'));
+    reader.readAsDataURL(file);
+  });
+}
+function debounce(fn,ms){ let h; return (...a)=>{clearTimeout(h); h=setTimeout(()=>fn(...a),ms);}; }
+
+// Word keeps separate font "channels" for Latin (ascii/hAnsi), Complex-script
+// (bidi — used by Persian/Arabic text and, in mixed runs, punctuation like
+// parentheses), and Far-East scripts. When exported HTML only sets a plain
+// CSS `font-family`, Word's HTML filter applies it to the Latin channel only
+// and leaves the bidi channel on the template default (often Times New Roman),
+// which is why English letters/parentheses/digits look like a different,
+// heavier font even after manually re-picking a font in Word. Setting all four
+// mso-*-font-family channels to the same font from the start avoids that split.
+function msoFontCss(fontFamily){
+  const primary = String(fontFamily||'Tahoma').split(',')[0].trim().replace(/^['"]|['"]$/g,'');
+  return `font-family:${fontFamily},Tahoma,Arial,sans-serif; mso-ascii-font-family:'${primary}'; mso-hansi-font-family:'${primary}'; mso-bidi-font-family:'${primary}'; mso-fareast-font-family:'${primary}';`;
+}
+
+/* ============ JALALI (PERSIAN) CALENDAR ============
+   Standard jalaali conversion algorithm (jalaali-js), used to power
+   Persian-calendar date pickers throughout the app. */
+function jDiv(a,b){ return ~~(a/b); }
+function jMod(a,b){ return a - ~~(a/b)*b; }
+var J_BREAKS=[-61,9,38,199,426,686,756,818,1111,1181,1210,1635,2060,2097,2192,2262,2324,2394,2456,3178];
+function jalCal(jy){
+  var bl=J_BREAKS.length, gy=jy+621, leapJ=-14, jp=J_BREAKS[0], jm,jump,leap,leapG,march,n,i;
+  for(i=1;i<bl;i+=1){ jm=J_BREAKS[i]; jump=jm-jp; if(jy<jm) break; leapJ=leapJ+jDiv(jump,33)*8+jDiv(jMod(jump,33),4); jp=jm; }
+  n=jy-jp;
+  leapJ=leapJ+jDiv(n,33)*8+jDiv(jMod(n,33)+3,4);
+  if(jMod(jump,33)===4 && jump-n===4) leapJ+=1;
+  leapG=jDiv(gy,4)-jDiv((jDiv(gy,100)+1)*3,4)-150;
+  march=20+leapJ-leapG;
+  if(jump-n<6) n=n-jump+jDiv(jump,33)*33;
+  leap=jMod(jMod(n+1,33)-1,4); if(leap===-1) leap=4;
+  return {leap:leap, gy:gy, march:march};
+}
+function g2d(gy,gm,gd){
+  var d=jDiv((gy+jDiv(gm-8,6)+100100)*1461,4)+jDiv(153*jMod(gm+9,12)+2,5)+gd-34840408;
+  d=d-jDiv(jDiv(gy+100100+jDiv(gm-8,6),100)*3,4)+752;
+  return d;
+}
+function j2d(jy,jm,jd){ var r=jalCal(jy); return g2d(r.gy,3,r.march)+(jm-1)*31-jDiv(jm,7)*(jm-7)+jd-1; }
+function d2g(jdn){
+  var j,i,gd,gm,gy;
+  j=4*jdn+139361631;
+  j=j+jDiv(jDiv(4*jdn+183187720,146097)*3,4)*4-3908;
+  i=jDiv(jMod(j,1461),4)*5+308;
+  gd=jDiv(jMod(i,153),5)+1;
+  gm=jMod(jDiv(i,153),12)+1;
+  gy=jDiv(j,1461)-100100+jDiv(8-gm,6);
+  return {gy:gy, gm:gm, gd:gd};
+}
+function d2j(jdn){
+  var gy=d2g(jdn).gy, jy=gy-621, r=jalCal(jy), jdn1f=g2d(gy,3,r.march), jd,jm,k;
+  k=jdn-jdn1f;
+  if(k>=0){ if(k<=185){ jm=1+jDiv(k,31); jd=jMod(k,31)+1; return {jy:jy,jm:jm,jd:jd}; } else { k-=186; } }
+  else { jy-=1; k+=179; if(r.leap===1) k+=1; }
+  jm=7+jDiv(k,30); jd=jMod(k,30)+1;
+  return {jy:jy,jm:jm,jd:jd};
+}
+function toJalaali(gy,gm,gd){ return d2j(g2d(gy,gm,gd)); }
+function toGregorianYMD(jy,jm,jd){ return d2g(j2d(jy,jm,jd)); }
+
+const PERSIAN_MONTHS=['فروردین','اردیبهشت','خرداد','تیر','مرداد','شهریور','مهر','آبان','آذر','دی','بهمن','اسفند'];
+function jalaaliToday(){ const g=new Date(); return toJalaali(g.getFullYear(), g.getMonth()+1, g.getDate()); }
+function parseJalaliStr(s){
+  if(!s) return null;
+  const m = String(s).match(/(\d{4})\D+(\d{1,2})\D+(\d{1,2})/);
+  if(!m) return null;
+  return {jy:+m[1], jm:+m[2], jd:+m[3]};
+}
+function jalaliDateSelectsHtml(idBase, jy,jm,jd){
+  const cur = jalaaliToday().jy;
+  let yOpts=''; for(let y=cur-3;y<=cur+3;y++) yOpts+=`<option value="${y}" ${jy==y?'selected':''}>${y}</option>`;
+  let mOpts=PERSIAN_MONTHS.map((mn,i)=>`<option value="${i+1}" ${jm==(i+1)?'selected':''}>${mn}</option>`).join('');
+  let dOpts=''; for(let d=1;d<=31;d++) dOpts+=`<option value="${d}" ${jd==d?'selected':''}>${d}</option>`;
+  return `<div class="row" style="gap:6px;">
+    <select id="${idBase}_y" autocomplete="off" style="min-width:80px;">${yOpts}</select>
+    <select id="${idBase}_m" autocomplete="off" style="min-width:100px;">${mOpts}</select>
+    <select id="${idBase}_d" autocomplete="off" style="min-width:70px;">${dOpts}</select>
+  </div>`;
+}
+function readJalaliSelects(idBase){
+  const y=+document.getElementById(idBase+'_y').value;
+  const m=+document.getElementById(idBase+'_m').value;
+  const d=+document.getElementById(idBase+'_d').value;
+  return {jy:y,jm:m,jd:d};
+}
+function jalaliDateLabel(j){ return j ? `${j.jd} ${PERSIAN_MONTHS[j.jm-1]} ${j.jy}` : ''; }
+
+/* ============ STATE ============ */
+function uidHf(){ return 'hf'+Date.now()+Math.random().toString(36).slice(2,7); }
+const DEFAULT_HEADER_FIELDS = [
+  {id:uidHf(), label:'نام و نام خانوادگی', value:'', type:'text', removable:true},
+  {id:uidHf(), label:'نام درس', value:'', type:'text', removable:true},
+  {id:uidHf(), label:'تاریخ امتحان', value:'', type:'date', removable:true},
+  {id:uidHf(), label:'نام مدرسه', value:'', type:'text', removable:true}
+];
+function makeCell(content){ return {content: content||'', rowspan:1, colspan:1, hidden:false, align:'right', bold:false}; }
+function defaultHeaderGrid(){
+  const labels = [['نام و نام خانوادگی',''],['نام درس',''],['تاریخ امتحان',''],['نام مدرسه','']];
+  return { rows: 4, cols: 2, cells: labels.map(pair=>[makeCell(pair[0]), makeCell(pair[1])]) };
+}
+
+const DEFAULT_DESIGN = {
+  columns: [
+    {key:'num', label:'ردیف', widthPct:8, fontFamily:'Tahoma', fontSize:13, bold:true, color:'#000000', bg:'#ffffff', align:'center'},
+    {key:'question', label:'سوالات', widthPct:74, fontFamily:'Tahoma', fontSize:14, bold:false, color:'#000000', bg:'#ffffff', align:'right'},
+    {key:'score', label:'نمره', widthPct:10, fontFamily:'Tahoma', fontSize:13, bold:true, color:'#000000', bg:'#ffffff', align:'center'}
+  ],
+  showAnswerColumn: false,
+  answerColumn: {label:'پاسخ', widthPct:8, fontFamily:'Tahoma', fontSize:13, bold:false, color:'#000000', bg:'#ffffff', align:'right'},
+  borderColor:'#000000', borderWidth:1,
+  rowMinHeight:18,
+  cellPadding:2,
+  rowSpacing:0,
+  pageMargin:14,
+  pageSize:'A4',
+  showPageFooter:false,
+  headerFont: {fontFamily:'Tahoma', fontSize:14, bold:true}
+};
+
+let state = {
+  headerFields: JSON.parse(JSON.stringify(DEFAULT_HEADER_FIELDS)),
+  headerFieldsPerRow: 3,
+  headerGrid: defaultHeaderGrid(),
+  useHeaderGrid: false,
+  headerImage: null,
+  useHeaderImage: false,
+  questions: [],
+  defaultScore: 1,
+  design: JSON.parse(JSON.stringify(DEFAULT_DESIGN))
+};
+
+function saveDraft(){
+  try{ AppStorage.setItem('examBuilderDraft', JSON.stringify(state)); }
+  catch(e){ toast('⚠️ ذخیرهٔ خودکار ناموفق بود؛ حافظهٔ مرورگر پر شده (احتمالاً به‌خاطر تصاویر زیاد). یک نسخهٔ پشتیبان بگیرید و چند مورد قدیمی را پاک کنید.'); }
+  renderStorageUsage();
+}
+// Rough estimate of how full the browser's localStorage is. Real quotas vary by
+// browser (commonly ~5-10MB per origin), so this uses a conservative 5MB baseline
+// just to give the teacher an early warning before saves start silently failing.
+function renderStorageUsage(){
+  const bar = document.getElementById('storageUsageBar');
+  const text = document.getElementById('storageUsageText');
+  if(!bar || !text) return;
+  let bytes = 0;
+  try{
+    for(let i=0;i<AppStorage.length;i++){
+      const k = AppStorage.key(i);
+      bytes += ((k||'').length + (AppStorage.getItem(k)||'').length) * 2;
+    }
+  }catch(e){}
+  const estQuota = AppStorage.quotaBytes;
+  const pct = Math.min(100, Math.round(bytes/estQuota*100));
+  const mb = (bytes/1024/1024).toFixed(2);
+  const quotaMb = Math.round(estQuota/1024/1024);
+  bar.style.width = pct+'%';
+  bar.style.background = pct>85 ? 'var(--danger)' : (pct>60 ? 'var(--warn)' : 'var(--success)');
+  text.textContent = `حدود ${mb} مگابایت استفاده‌شده (تقریباً ${pct}٪ از حدود ${quotaMb} مگابایت ظرفیت تخمینی این دستگاه)`;
+}
+const saveDraftDebounced = debounce(saveDraft, 400);
+
+function loadDraft(){
+  try{
+    const raw = AppStorage.getItem('examBuilderDraft');
+    if(raw){ const d = JSON.parse(raw); if(d && d.headerFields && d.questions){ state = Object.assign(state,d); } }
+  }catch(e){}
+}
+
+/* ============ TABS ============ */
+document.getElementById('topbar').addEventListener('click', e=>{
+  const btn = e.target.closest('.tab'); if(!btn) return;
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  const v = btn.dataset.view;
+  document.querySelectorAll('.view').forEach(s=>s.classList.remove('active'));
+  document.getElementById('view-'+v).classList.add('active');
+  if(v==='bank') renderBankList();
+  if(v==='design'){ renderDesignTab(); renderHeaderFields(); renderHeaderGrid(); }
+});
+
+/* ============ MODAL ============ */
+function openModal(html){ document.getElementById('modalBox').innerHTML = html; document.getElementById('modalBg').classList.add('show'); }
+function closeModal(){ document.getElementById('modalBg').classList.remove('show'); }
+document.getElementById('modalBg').addEventListener('click', e=>{ if(e.target.id==='modalBg') closeModal(); });
+
+/* ============ NO-FORM / KEYBOARD FIX ============
+   No <form> tags are used anywhere in this app, and Enter never triggers
+   navigation or a page reload — it's blocked on all text inputs so mobile
+   keyboards stay open and typing is never interrupted. */
+document.addEventListener('keydown', function(e){
+  if(e.key==='Enter' && (e.target.tagName==='INPUT')){
+    e.preventDefault();
+  }
+}, true);
+
+/* ============ QUESTION BUILDER ============ */
+const qTypeSel = document.getElementById('qType');
+const qScoreSel = document.getElementById('qScore');
+qScoreSel.innerHTML = scoreOptions(1);
+
+function builderTemplate(type){
+  switch(type){
+    case 'tf': return `
+      <label>متن سوال</label>
+      <textarea id="b_text" autocomplete="off" placeholder="متن سوال صحیح/غلط را بنویسید..."></textarea>
+      <label style="margin-top:8px;">پاسخ صحیح</label>
+      <div class="tf-btns">
+        <button type="button" class="secondary" id="b_tf_true" data-val="true">✓ صحیح</button>
+        <button type="button" class="secondary" id="b_tf_false" data-val="false">✗ غلط</button>
+      </div>`;
+    case 'blank': return `
+      <label>متن سوال (جای خالی را با ___ مشخص کنید)</label>
+      <textarea id="b_text" autocomplete="off" placeholder="مثال: پایتخت ایران ___ است."></textarea>
+      <label style="margin-top:8px;">پاسخ صحیح (در صورت چند جای خالی، با | جدا کنید)</label>
+      <input type="text" id="b_answer" autocomplete="off">`;
+    case 'paren': return `
+      <label>متن سوال با گزینه‌ها داخل پرانتز (گزینه‌ها را با / جدا کنید)</label>
+      <textarea id="b_text" autocomplete="off" placeholder="مثال: آب در دمای صفر درجه (جامد / مایع / گاز) می‌شود."></textarea>
+      <label style="margin-top:8px;">گزینه صحیح</label>
+      <input type="text" id="b_answer" autocomplete="off" placeholder="مثلاً: جامد">`;
+    case 'mc4': return `
+      <label>متن سوال</label>
+      <textarea id="b_text" autocomplete="off"></textarea>
+      <div class="grid2" style="margin-top:8px;">
+        <div><label>گزینه ۱</label><input type="text" id="b_opt1" autocomplete="off"></div>
+        <div><label>گزینه ۲</label><input type="text" id="b_opt2" autocomplete="off"></div>
+        <div><label>گزینه ۳</label><input type="text" id="b_opt3" autocomplete="off"></div>
+        <div><label>گزینه ۴</label><input type="text" id="b_opt4" autocomplete="off"></div>
+      </div>
+      <label style="margin-top:8px;">گزینه صحیح</label>
+      <select id="b_correct_idx" autocomplete="off">
+        <option value="0">گزینه ۱</option><option value="1">گزینه ۲</option>
+        <option value="2">گزینه ۳</option><option value="3">گزینه ۴</option>
+      </select>
+      <label style="margin-top:8px;">تحلیل و توضیح پاسخ (اختیاری — فقط در خروجیِ همراه با پاسخ نمایش داده می‌شود)</label>
+      <textarea id="b_explanation" autocomplete="off" placeholder="در صورت نیاز، تحلیل یا دلیل پاسخ صحیح را بنویسید..."></textarea>
+      <label style="margin-top:8px;">تصویر توضیح پاسخ (اختیاری — فقط در خروجیِ همراه با پاسخ نمایش داده می‌شود)</label>
+      <input type="file" id="b_explanation_img" accept="image/*" autocomplete="off">
+      <label style="margin-top:8px;">تصویر ضمیمه معلم (اختیاری — همراه متن سوال، در هر دو خروجی نمایش داده می‌شود)</label>
+      <input type="file" id="b_teacher_img" accept="image/*" autocomplete="off">`;
+    case 'match': return `
+      <label>عنوان سوال وصل کنید (اختیاری)</label>
+      <input type="text" id="b_text" autocomplete="off" placeholder="موارد ستون الف را به ستون ب وصل کنید">
+      <p class="small">ستون ب را می‌توانید به هر ترتیبی (به‌هم‌ریخته) وارد کنید؛ پاسخ صحیح را جداگانه در پایین مشخص می‌کنید.</p>
+      <div class="grid2" style="margin-top:8px;">
+        <div>
+          <label>ستون الف</label>
+          <div id="matchLeftRows"></div>
+          <button type="button" class="secondary" id="btnAddLeftRow" style="margin-top:6px;">➕ افزودن به ستون الف</button>
+        </div>
+        <div>
+          <label>ستون ب</label>
+          <div id="matchRightRows"></div>
+          <button type="button" class="secondary" id="btnAddRightRow" style="margin-top:6px;">➕ افزودن به ستون ب</button>
+        </div>
+      </div>
+      <label style="margin-top:14px;">تعیین پاسخ صحیح (برای هر مورد ستون الف، گزینهٔ درست از ستون ب را انتخاب کنید)</label>
+      <div id="matchAnswerRows"></div>`;
+    case 'essay': return `
+      <label>متن سوال</label>
+      <textarea id="b_text" autocomplete="off"></textarea>
+      <label style="margin-top:8px;">پاسخ سوال (اختیاری — فقط در خروجیِ همراه با پاسخ نمایش داده می‌شود)</label>
+      <input type="text" id="b_keywords" autocomplete="off" placeholder="پاسخ کامل یا کلمات کلیدی پاسخ را بنویسید...">
+      <label style="margin-top:8px;">تصویر پاسخ (اختیاری — فقط در خروجیِ همراه با پاسخ نمایش داده می‌شود)</label>
+      <input type="file" id="b_essay_answer_img" accept="image/*" autocomplete="off">
+      <label style="margin-top:8px;">تصویر ضمیمه معلم (اختیاری)</label>
+      <input type="file" id="b_teacher_img" accept="image/*" autocomplete="off">`;
+    default: return '';
+  }
+}
+
+let matchLeft = [];  // array of strings
+let matchRight = []; // array of strings
+let matchAnswers = []; // parallel to matchLeft: index into matchRight, or -1 if unset
+let tfValue = null;
+let teacherImgData = null;
+let explanationImgData = null;
+// If the person clicks "save question" while an image is still being read/
+// compressed (compressImageFile is async and can take a moment, especially
+// for a large phone photo), teacherImgData/explanationImgData could still be
+// null at save time and the image would silently be missing from the saved
+// question. These track the in-flight promise so the save handler can await
+// it first instead of reading a not-yet-populated variable.
+let teacherImgPromise = null;
+let explanationImgPromise = null;
+
+function renderBuilder(){
+  const type = qTypeSel.value;
+  document.getElementById('qBuilderBody').innerHTML = builderTemplate(type);
+  tfValue = null; teacherImgData = null; explanationImgData = null;
+  teacherImgPromise = null; explanationImgPromise = null;
+  if(type==='tf'){
+    document.getElementById('b_tf_true').addEventListener('click', ()=>setTf(true));
+    document.getElementById('b_tf_false').addEventListener('click', ()=>setTf(false));
+  }
+  if(type==='match'){
+    matchLeft = ['',''];
+    matchRight = ['',''];
+    matchAnswers = [-1,-1];
+    renderMatchBuilder();
+    document.getElementById('btnAddLeftRow').addEventListener('click', ()=>{ matchLeft.push(''); matchAnswers.push(-1); renderMatchBuilder(); });
+    document.getElementById('btnAddRightRow').addEventListener('click', ()=>{ matchRight.push(''); renderMatchBuilder(); });
+  }
+  if(type==='essay' || type==='mc4'){
+    document.getElementById('b_teacher_img').addEventListener('change', e=>{
+      const f = e.target.files[0]; if(!f) return;
+      const p = compressImageFile(f);
+      teacherImgPromise = p;
+      p.then(data=>{ teacherImgData = data; toast('تصویر پیوست شد ✓'); })
+       .catch(err=>{ toast(err.message || 'خطا در پردازش تصویر'); })
+       .finally(()=>{ if(teacherImgPromise===p) teacherImgPromise = null; });
+    });
+  }
+  if(type==='mc4'){
+    document.getElementById('b_explanation_img').addEventListener('change', e=>{
+      const f = e.target.files[0]; if(!f) return;
+      const p = compressImageFile(f);
+      explanationImgPromise = p;
+      p.then(data=>{ explanationImgData = data; toast('تصویر توضیح پاسخ پیوست شد ✓'); })
+       .catch(err=>{ toast(err.message || 'خطا در پردازش تصویر'); })
+       .finally(()=>{ if(explanationImgPromise===p) explanationImgPromise = null; });
+    });
+  }
+  if(type==='essay'){
+    document.getElementById('b_essay_answer_img').addEventListener('change', e=>{
+      const f = e.target.files[0]; if(!f) return;
+      const p = compressImageFile(f);
+      explanationImgPromise = p;
+      p.then(data=>{ explanationImgData = data; toast('تصویر پاسخ پیوست شد ✓'); })
+       .catch(err=>{ toast(err.message || 'خطا در پردازش تصویر'); })
+       .finally(()=>{ if(explanationImgPromise===p) explanationImgPromise = null; });
+    });
+  }
+}
+function setTf(v){
+  tfValue = v;
+  document.getElementById('b_tf_true').classList.toggle('selected', v===true);
+  document.getElementById('b_tf_false').classList.toggle('selected', v===false);
+}
+function renderMatchBuilder(){
+  const leftBox = document.getElementById('matchLeftRows');
+  leftBox.innerHTML = matchLeft.map((v,i)=>`
+    <div class="row" style="align-items:center; margin-bottom:6px;">
+      <input type="text" autocomplete="off" class="m-left" data-i="${i}" value="${esc(v)}" placeholder="مورد ${i+1}">
+      ${matchLeft.length>2?`<button type="button" class="ghost danger" data-del-left="${i}" style="color:#c0392b;">✕</button>`:''}
+    </div>`).join('');
+  const rightBox = document.getElementById('matchRightRows');
+  rightBox.innerHTML = matchRight.map((v,i)=>`
+    <div class="row" style="align-items:center; margin-bottom:6px;">
+      <input type="text" autocomplete="off" class="m-right" data-i="${i}" value="${esc(v)}" placeholder="مورد ${i+1}">
+      ${matchRight.length>2?`<button type="button" class="ghost danger" data-del-right="${i}" style="color:#c0392b;">✕</button>`:''}
+    </div>`).join('');
+
+  leftBox.querySelectorAll('.m-left').forEach(inp=>inp.addEventListener('input', e=>{
+    matchLeft[+e.target.dataset.i] = e.target.value; renderMatchAnswers();
+  }));
+  rightBox.querySelectorAll('.m-right').forEach(inp=>inp.addEventListener('input', e=>{
+    matchRight[+e.target.dataset.i] = e.target.value; renderMatchAnswers();
+  }));
+  leftBox.querySelectorAll('[data-del-left]').forEach(b=>b.addEventListener('click', e=>{
+    const i = +e.target.dataset.delLeft; matchLeft.splice(i,1); matchAnswers.splice(i,1); renderMatchBuilder();
+  }));
+  rightBox.querySelectorAll('[data-del-right]').forEach(b=>b.addEventListener('click', e=>{
+    const i = +e.target.dataset.delRight; matchRight.splice(i,1);
+    matchAnswers = matchAnswers.map(a=> a===i ? -1 : (a>i ? a-1 : a));
+    renderMatchBuilder();
+  }));
+  renderMatchAnswers();
+}
+function renderMatchAnswers(){
+  const box = document.getElementById('matchAnswerRows');
+  box.innerHTML = matchLeft.map((v,i)=>`
+    <div class="row" style="align-items:center; margin-bottom:6px;">
+      <span style="flex:1;">${i+1}) ${esc(v)||'(بدون متن)'}</span>
+      <select class="m-answer" data-i="${i}" autocomplete="off" style="flex:1;">
+        <option value="-1">— انتخاب پاسخ صحیح —</option>
+        ${matchRight.map((r,ri)=>`<option value="${ri}" ${matchAnswers[i]==ri?'selected':''}>${esc(r)||'(مورد '+(ri+1)+')'}</option>`).join('')}
+      </select>
+    </div>`).join('');
+  box.querySelectorAll('.m-answer').forEach(sel=>sel.addEventListener('change', e=>{
+    matchAnswers[+e.target.dataset.i] = +e.target.value;
+  }));
+}
+qTypeSel.addEventListener('change', renderBuilder);
+renderBuilder();
+
+let pendingGroupId = null;
+let editingQuestionId = null;
+document.getElementById('btnAddSection').addEventListener('click', ()=>{
+  const label = prompt('متن برچسب بخش را وارد کنید (مثلاً «بخش اول: صحیح/غلط»):');
+  if(!label) return;
+  state.questions.push({id:uid(), isSection:true, sectionLabel:label, order: state.questions.length});
+  renderQuestionsTable(); saveDraft();
+  toast('برچسب بخش اضافه شد ✓');
+});
+document.getElementById('btnNewExam').addEventListener('click', ()=>{
+  if(!state.questions.length){ toast('لیست سوالات همین الان هم خالیه'); return; }
+  if(!confirm('برای شروع آزمون جدید، فهرست فعلی سوالات (فقط از این آزمون، نه از بانک سوالات) پاک می\u200cشود. اگر می\u200cخواهید این آزمون را نگه دارید، اول از تب «ابزارها» با دکمهٔ «ذخیرهٔ کل آزمون با یک اسم» آن را ذخیره کنید. ادامه می\u200cدهید؟')) return;
+  state.questions = [];
+  renderQuestionsTable(); saveDraft();
+  toast('آزمون جدید آماده شد ✓');
+});
+document.getElementById('qSearchBox').addEventListener('input', e=>{
+  qSearchTerm = e.target.value;
+  renderQuestionsTable();
+});
+function updateAnswerBoxHeightHint(){
+  const hint = document.getElementById('qAnswerBoxHeightHint');
+  const mm = +document.getElementById('qAnswerBoxHeight').value;
+  if(!mm){ hint.textContent = ''; return; }
+  const lines = Math.max(1, Math.round(mm/7)); // ~۷ میلی‌متر برای هر خط دست‌نویس معمولی
+  hint.textContent = `≈ ${toFa(lines)} خط برای پاسخ دست‌نویس`;
+}
+document.getElementById('qAnswerBoxHeight').addEventListener('input', updateAnswerBoxHeightHint);
+document.getElementById('btnSaveQuestion').addEventListener('click', async ()=>{
+  if(teacherImgPromise || explanationImgPromise){
+    toast('در حال پردازش تصویر… لطفاً چند لحظه صبر کنید');
+    try{ if(teacherImgPromise) await teacherImgPromise; }catch(e){}
+    try{ if(explanationImgPromise) await explanationImgPromise; }catch(e){}
+  }
+  const type = qTypeSel.value;
+  const score = +qScoreSel.value;
+  const text = (document.getElementById('b_text')||{}).value || '';
+  const answerBoxHeightRaw = document.getElementById('qAnswerBoxHeight').value;
+  let q = {id:uid(), type, text, score, order: state.questions.length};
+  if(answerBoxHeightRaw){ q.answerBoxHeight = +answerBoxHeightRaw; }
+  if(pendingGroupId){ q.groupId = pendingGroupId; }
+
+  if(type==='tf'){
+    if(tfValue===null){ toast('پاسخ صحیح/غلط را انتخاب کنید'); return; }
+    if(!text.trim()){ toast('متن سوال را وارد کنید'); return; }
+    q.correctAnswer = tfValue;
+  } else if(type==='blank'){
+    q.answer = document.getElementById('b_answer').value;
+    if(!text.trim() || !q.answer.trim()){ toast('متن سوال و پاسخ را کامل کنید'); return; }
+  } else if(type==='paren'){
+    q.answer = document.getElementById('b_answer').value;
+    if(!text.trim() || !q.answer.trim()){ toast('متن سوال و پاسخ را کامل کنید'); return; }
+  } else if(type==='mc4'){
+    q.options = [1,2,3,4].map(n=>document.getElementById('b_opt'+n).value);
+    q.correctIndex = +document.getElementById('b_correct_idx').value;
+    if(!text.trim() || q.options.some(o=>!o.trim())){ toast('همه گزینه‌ها و متن سوال را کامل کنید'); return; }
+    q.teacherImage = teacherImgData;
+    q.explanation = document.getElementById('b_explanation').value;
+    q.explanationImage = explanationImgData;
+  } else if(type==='match'){
+    if(matchLeft.some(v=>!v.trim()) || matchRight.some(v=>!v.trim())){ toast('همهٔ موارد ستون الف و ستون ب را کامل کنید'); return; }
+    if(matchAnswers.some(a=>a===-1)){ toast('پاسخ صحیح همهٔ موارد ستون الف را انتخاب کنید'); return; }
+    q.leftItems = matchLeft.slice();
+    q.rightItems = matchRight.slice();
+    q.correctMap = matchAnswers.map(idx=>matchRight[idx]);
+  } else if(type==='essay'){
+    if(!text.trim()){ toast('متن سوال را وارد کنید'); return; }
+    q.keywords = document.getElementById('b_keywords').value;
+    q.teacherImage = teacherImgData;
+    q.answerImage = explanationImgData;
+  }
+
+  const wasEditing = !!editingQuestionId;
+  if(editingQuestionId){
+    // Editing an existing question: keep its original id/order/groupId (unless
+    // the person is now joining it into a group via pendingGroupId) instead of
+    // appending a brand-new one at the end of the list.
+    const idx = state.questions.findIndex(x=>x.id===editingQuestionId);
+    if(idx>-1){
+      q.id = editingQuestionId;
+      q.order = state.questions[idx].order;
+      q.groupId = pendingGroupId || state.questions[idx].groupId;
+      state.questions[idx] = q;
+    }
+    editingQuestionId = null;
+  } else {
+    state.questions.push(q);
+  }
+  pendingGroupId = null;
+  renderQuestionsTable();
+  document.getElementById('btnResetBuilder').click();
+  saveDraft();
+  toast('سوال ذخیره شد ✓');
+  if(wasEditing){
+    // Jump back to this question's row in the list (instead of staying up at
+    // the builder) so the teacher can immediately hit "edit" on the next row
+    // down, without re-scrolling through the whole list each time.
+    const savedRow = document.querySelector(`tr[data-id="${q.id}"]`);
+    if(savedRow) savedRow.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+});
+document.getElementById('btnResetBuilder').addEventListener('click', ()=>{
+  editingQuestionId = null;
+  pendingGroupId = null;
+  document.getElementById('qAnswerBoxHeight').value='';
+  updateAnswerBoxHeightHint();
+  document.getElementById('btnSaveQuestion').textContent = '💾 ذخیره سوال';
+  renderBuilder();
+});
+
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+function questionSummaryText(q){
+  if(q.type==='match') return (q.text||'وصل کنید') + ' — ' + q.leftItems.length + ' مورد';
+  return q.text;
+}
+function correctAnswerText(q){
+  switch(q.type){
+    case 'tf': return q.correctAnswer ? 'صحیح' : 'غلط';
+    case 'blank': case 'paren': return q.answer;
+    case 'mc4': return 'گزینه '+(q.correctIndex+1)+': '+q.options[q.correctIndex] + (q.explanation?' | تحلیل: '+q.explanation:'');
+    case 'match': return q.leftItems.map((l,i)=>`${l} ← ${q.correctMap[i]}`).join('، ');
+    case 'essay': return 'پاسخ: '+(q.keywords||'-');
+    default: return '';
+  }
+}
+function typeLabel(t){
+  return {tf:'صحیح/غلط', blank:'جای خالی', paren:'پرانتزی', mc4:'چهارگزینه‌ای', match:'وصل کنید', essay:'تشریحی'}[t]||t;
+}
+
+let qSearchTerm = '';
+function questionMatchesSearch(q, term){
+  const t = term.trim().toLowerCase();
+  if(!t) return true;
+  const hay = [q.text, q.answer, q.keywords, q.explanation, ...(q.options||[]), ...(q.leftItems||[]), ...(q.rightItems||[]), ...(q.correctMap||[])]
+    .filter(Boolean).join(' ').toLowerCase();
+  return hay.includes(t);
+}
+function renderQuestionsTable(){
+  document.getElementById('qCount').textContent = state.questions.filter(q=>!q.isSection).length;
+  const wrap = document.getElementById('questionsTableWrap');
+  if(!state.questions.length){ wrap.innerHTML = '<div class="empty-hint">هنوز سوالی ثبت نشده است.</div>'; return; }
+  const rowsHtml = state.questions.map((q,i)=>{
+    if(q.isSection){
+      return `<tr data-id="${q.id}" style="background:#eef3e4;">
+        <td class="col-num">—</td>
+        <td colspan="3"><b>🏷️ ${esc(q.sectionLabel)}</b></td>
+        <td class="col-actions">
+          <button class="ghost" data-act="top" title="انتقال به ابتدا">⏫</button>
+          <button class="ghost" data-act="up">↑</button>
+          <button class="ghost" data-act="down">↓</button>
+          <button class="ghost" data-act="bottom" title="انتقال به انتها">⏬</button>
+          <button class="ghost" data-act="editSection" title="ویرایش برچسب">✏️</button>
+          <button class="ghost danger" data-act="del" style="color:#c0392b;">✕</button>
+        </td>
+      </tr>`;
+    }
+    if(qSearchTerm && !questionMatchesSearch(q, qSearchTerm)) return '';
+    return `
+    <tr data-id="${q.id}" style="${q.groupId?'background:#fbf6e8;':''}">
+      <td class="col-num">${toFa(i+1)}</td>
+      <td><span class="badge">${typeLabel(q.type)}</span>${q.groupId?' <span class="badge" style="background:#f5e6b8;">🔗 هم‌ردیف</span>':''}<br>${esc(questionSummaryText(q))}</td>
+      <td class="col-score"><select class="qs-score" autocomplete="off">${scoreOptions(q.score)}</select></td>
+      <td class="col-ans">${esc(correctAnswerText(q))}</td>
+      <td class="col-actions">
+        <button class="ghost" data-act="top" title="انتقال به ابتدا">⏫</button>
+        <button class="ghost" data-act="up">↑</button>
+        <button class="ghost" data-act="down">↓</button>
+        <button class="ghost" data-act="bottom" title="انتقال به انتها">⏬</button>
+        <button class="ghost" data-act="edit" title="ویرایش سوال">✏️</button>
+        <button class="ghost" data-act="dup" title="تکرار/کپی سوال">📋</button>
+        <button class="ghost" data-act="group" title="افزودن سوال مشابه در همین ردیف">➕🔗</button>
+        ${(i>0 && !state.questions[i-1].isSection && !(state.questions[i-1].groupId && state.questions[i-1].groupId===q.groupId)) ? `<button class="ghost" data-act="joinPrev" title="هم‌ردیف‌کردن با سوال بالا">🔼🔗</button>` : ''}
+        ${q.groupId ? `<button class="ghost" data-act="ungroup" title="خارج‌کردن از حالت هم‌ردیف">🔓</button>` : ''}
+        <button class="ghost" data-act="bank" title="افزودن به بانک">🏦</button>
+        <button class="ghost danger" data-act="del" style="color:#c0392b;">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+  if(qSearchTerm && !rowsHtml.trim()){
+    wrap.innerHTML = '<div class="empty-hint">چیزی با این جستجو پیدا نشد.</div>';
+    return;
+  }
+  wrap.innerHTML = `<table class="qtable"><thead><tr>
+    <th class="col-num">ردیف</th><th>متن سوال</th><th class="col-score">بارم</th><th class="col-ans">پاسخ صحیح</th><th class="col-actions">عملیات</th>
+  </tr></thead><tbody>${rowsHtml}</tbody></table>`;
+  wrap.querySelectorAll('.qs-score').forEach(sel=>{
+    sel.addEventListener('change', e=>{
+      const tr = e.target.closest('tr'); const q = state.questions.find(x=>x.id===tr.dataset.id);
+      q.score = +e.target.value; saveDraft();
+    });
+  });
+  wrap.querySelectorAll('button[data-act]').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      const tr = e.target.closest('tr'); const idx = state.questions.findIndex(x=>x.id===tr.dataset.id);
+      const act = btn.dataset.act;
+      if(act==='del'){
+        const target = state.questions[idx];
+        const msg = target.isSection ? 'این برچسب بخش حذف شود؟' : 'این سوال برای همیشه حذف شود؟';
+        if(!confirm(msg)) return;
+        state.questions.splice(idx,1);
+      }
+      if(act==='up' && idx>0){ [state.questions[idx-1],state.questions[idx]]=[state.questions[idx],state.questions[idx-1]]; }
+      if(act==='down' && idx<state.questions.length-1){ [state.questions[idx+1],state.questions[idx]]=[state.questions[idx],state.questions[idx+1]]; }
+      if(act==='top' && idx>0){ const [it] = state.questions.splice(idx,1); state.questions.unshift(it); }
+      if(act==='bottom' && idx<state.questions.length-1){ const [it] = state.questions.splice(idx,1); state.questions.push(it); }
+      if(act==='dup'){
+        const copy = JSON.parse(JSON.stringify(state.questions[idx]));
+        copy.id = uid();
+        delete copy.groupId; // a duplicate starts out on its own row; use 🔼🔗 to re-join a row if needed
+        state.questions.splice(idx+1, 0, copy);
+        renderQuestionsTable(); saveDraft();
+        toast('سوال کپی شد ✓');
+        return;
+      }
+      if(act==='bank'){ addToBank(state.questions[idx]); return; }
+      if(act==='editSection'){
+        const sec = state.questions[idx];
+        const label = prompt('متن برچسب بخش را ویرایش کنید:', sec.sectionLabel);
+        if(label){ sec.sectionLabel = label; renderQuestionsTable(); saveDraft(); }
+        return;
+      }
+      if(act==='joinPrev'){
+        if(idx===0 || state.questions[idx-1].isSection){ toast('سوال بالایی برای هم‌ردیف‌کردن وجود ندارد'); return; }
+        const prev = state.questions[idx-1];
+        if(!prev.groupId){ prev.groupId = uid(); }
+        state.questions[idx].groupId = prev.groupId;
+        renderQuestionsTable(); saveDraft();
+        toast('این سوال هم‌ردیفِ سوال بالایی شد ✓');
+        return;
+      }
+      if(act==='ungroup'){
+        const gid = state.questions[idx].groupId;
+        delete state.questions[idx].groupId;
+        const remaining = state.questions.filter(x=>x.groupId===gid);
+        if(remaining.length===1){ delete remaining[0].groupId; }
+        renderQuestionsTable(); saveDraft();
+        toast('این سوال از حالت هم‌ردیف خارج شد ✓');
+        return;
+      }
+      if(act==='edit'){
+        loadQuestionForEdit(state.questions[idx]);
+        document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+        document.querySelector('.tab[data-view="questions"]').classList.add('active');
+        document.querySelectorAll('.view').forEach(s=>s.classList.remove('active'));
+        document.getElementById('view-questions').classList.add('active');
+        return;
+      }
+      if(act==='group'){
+        const src = state.questions[idx];
+        if(!src.groupId){ src.groupId = uid(); }
+        pendingGroupId = src.groupId;
+        qTypeSel.value = src.type;
+        renderBuilder();
+        document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+        document.querySelector('.tab[data-view="questions"]').classList.add('active');
+        toast('حالا سوال بعدی را بسازید؛ در همین ردیف قرار می‌گیرد (بدون خط جداکننده)');
+        renderQuestionsTable();
+        return;
+      }
+      renderQuestionsTable(); saveDraft();
+    });
+  });
+}
+
+function loadQuestionForEdit(q){
+  editingQuestionId = q.id;
+  pendingGroupId = null;
+  qTypeSel.value = q.type;
+  qScoreSel.value = q.score;
+  renderBuilder();
+  document.getElementById('b_text').value = q.text || '';
+  document.getElementById('qAnswerBoxHeight').value = q.answerBoxHeight || '';
+  updateAnswerBoxHeightHint();
+  if(q.type==='tf'){
+    setTf(q.correctAnswer);
+  } else if(q.type==='blank' || q.type==='paren'){
+    document.getElementById('b_answer').value = q.answer || '';
+  } else if(q.type==='mc4'){
+    [1,2,3,4].forEach(n=>{ document.getElementById('b_opt'+n).value = (q.options && q.options[n-1]) || ''; });
+    document.getElementById('b_correct_idx').value = q.correctIndex;
+    document.getElementById('b_explanation').value = q.explanation || '';
+    teacherImgData = q.teacherImage || null;
+    explanationImgData = q.explanationImage || null;
+  } else if(q.type==='match'){
+    matchLeft = (q.leftItems && q.leftItems.length) ? q.leftItems.slice() : ['',''];
+    matchRight = (q.rightItems && q.rightItems.length) ? q.rightItems.slice() : ['',''];
+    matchAnswers = matchLeft.map((l,i)=> matchRight.indexOf((q.correctMap||[])[i]));
+    renderMatchBuilder();
+    renderMatchAnswers();
+  } else if(q.type==='essay'){
+    document.getElementById('b_keywords').value = q.keywords || '';
+    teacherImgData = q.teacherImage || null;
+    explanationImgData = q.answerImage || null;
+  }
+  document.getElementById('btnSaveQuestion').textContent = '✏️ بروزرسانی سوال';
+  toast('سوال برای ویرایش بارگذاری شد — تغییرات را اعمال و «بروزرسانی سوال» را بزنید');
+}
+
+/* ============ EXPORT (PDF / WORD) — shared HTML builder ============ */
+function buildHeaderGridHTML(){
+  if(state.useHeaderImage && state.headerImage){
+    return `<img src="${state.headerImage}" style="max-width:100%; display:block; margin-bottom:10px;">`;
+  }
+  const d = state.design;
+  const hf = d.headerFont;
+  const bw = d.borderWidth+'px'; const bc = d.borderColor;
+  const cellStyle = `border:${bw} solid ${bc}; padding:${d.cellPadding!=null?d.cellPadding:2}mm; text-align:right; vertical-align:middle; ${msoFontCss(hf.fontFamily)} font-size:${hf.fontSize}px; word-wrap:break-word; overflow-wrap:break-word; word-break:break-word;`;
+  const labelStyle = cellStyle + `background:#f2f2f2; font-weight:bold;`;
+
+  if(state.useHeaderGrid){
+    const grid = state.headerGrid;
+    const rowsHtml = grid.cells.map(row=>{
+      const tds = row.filter(c=>!c.hidden).map(c=>
+        `<td rowspan="${c.rowspan}" colspan="${c.colspan}" style="${cellStyle}${c.bold?'font-weight:bold;':''}">${esc(c.content)||'&nbsp;'}</td>`
+      ).join('');
+      return `<tr>${tds}</tr>`;
+    }).join('');
+    return `<table style="border-collapse:collapse; width:100%; table-layout:fixed;">${rowsHtml}</table>`;
+  }
+
+  // Compact field list: several label/value pairs per row (matches the
+  // editing view's density) instead of one field per row, which was making
+  // the printed header unnecessarily tall.
+  const perRow = state.headerFieldsPerRow || 3;
+  let rowsHtml = '';
+  for(let i=0;i<state.headerFields.length;i+=perRow){
+    const chunk = state.headerFields.slice(i, i+perRow);
+    rowsHtml += '<tr>' + chunk.map(f=>
+      `<td style="${labelStyle} width:${Math.round(35/perRow*3)}%;">${esc(f.label)}</td><td style="${cellStyle}">${esc(f.value)||'&nbsp;'}</td>`
+    ).join('') + '</tr>';
+  }
+  return `<table style="border-collapse:collapse; width:100%; table-layout:fixed;">${rowsHtml}</table>`;
+}
+
+function buildExamHTML(withAnswers){
+  const d = state.design;
+  const bw = d.borderWidth+'px'; const bc = d.borderColor;
+  const cellBase = (col)=> `border:${bw} solid ${bc}; padding:${d.cellPadding!=null?d.cellPadding:2}mm; text-align:${col.align||'right'}; vertical-align:top; ${msoFontCss(col.fontFamily)} font-size:${col.fontSize}px; font-weight:${col.bold?'bold':'normal'}; color:${col.color}; background:${col.bg}; word-wrap:break-word; overflow-wrap:break-word; word-break:break-word;`;
+
+  const cols = d.showAnswerColumn ? [...d.columns, Object.assign({key:'answer'}, d.answerColumn)] : d.columns;
+  const colgroup = `<colgroup>${cols.map(c=>`<col style="width:${c.widthPct}%;">`).join('')}</colgroup>`;
+
+  function renderQuestionBody(q, prefix){
+    const pfx = prefix ? `<b>${prefix}</b> ` : '';
+    let answerText = '';
+    let body = '';
+    if(q.type==='tf'){
+      body = `<p>${pfx}${esc(q.text)} &nbsp;&nbsp; صحیح &nbsp; غلط</p>`;
+      answerText = q.correctAnswer?'صحیح':'غلط';
+    } else if(q.type==='blank' || q.type==='paren'){
+      body = `<p>${pfx}${esc(q.text)}</p>`;
+      answerText = esc(q.answer);
+    } else if(q.type==='mc4'){
+      body = `<p>${pfx}${esc(q.text)}</p>` + (q.teacherImage?`<img src="${q.teacherImage}" width="220" style="max-width:220px;display:block;margin:2px 0;">`:'') +
+             `<p>` + q.options.map((o,oi)=>`${oi+1}) ${esc(o)}`).join('&nbsp;&nbsp;') + `</p>`;
+      answerText = `گزینه ${q.correctIndex+1}` + (q.explanation?`<br><span style="font-weight:normal;">تحلیل: ${esc(q.explanation)}</span>`:'') + (q.explanationImage?`<br><img src="${q.explanationImage}" width="220" style="max-width:220px;display:block;margin:2px 0;">`:'');
+    } else if(q.type==='match'){
+      const mCellStyle = cellBase(d.columns.find(c=>c.key==='question'));
+      body = `<p>${pfx}${esc(q.text||'موارد ستون الف را به ستون ب وصل کنید.')}</p>
+        <table style="border-collapse:collapse; width:100%;"><tr><th style="${mCellStyle}">ستون الف</th><th style="${mCellStyle}">ستون ب</th></tr>${q.leftItems.map((l,li)=>
+          `<tr><td style="${mCellStyle}">${toFa(li+1)}) ${esc(l)}</td><td style="${mCellStyle}">${withAnswers?esc(q.correctMap[li]):esc(q.rightItems[li]||'')}</td></tr>`).join('')}</table>`;
+      answerText = '';
+    } else if(q.type==='essay'){
+      body = `<p>${pfx}${esc(q.text)}</p>` + (q.teacherImage?`<img src="${q.teacherImage}" width="220" style="max-width:220px;display:block;margin:2px 0;">`:'');
+      answerText = esc(q.keywords||'-') + (q.answerImage?`<br><img src="${q.answerImage}" width="220" style="max-width:220px;display:block;margin:2px 0;">`:'');
+    }
+    return {body, answerText};
+  }
+
+  const numColStyle = cellBase(d.columns.find(c=>c.key==='num')) + 'text-align:center;';
+  const qColStyle = cellBase(d.columns.find(c=>c.key==='question'));
+  const scoreColStyle = cellBase(d.columns.find(c=>c.key==='score')) + 'text-align:center;';
+
+  let rowsHtml = '';
+  let i = 0;
+  const totalQ = state.questions.length;
+  let visibleNum = 0; // question numbering skips section-label rows
+  while(i < totalQ){
+    const q = state.questions[i];
+
+    if(q.isSection){
+      const hf = d.headerFont;
+      rowsHtml += `<tr><td colspan="${cols.length}" style="border:${bw} solid ${bc}; padding:8px; text-align:center; ${msoFontCss(hf.fontFamily)} font-size:${hf.fontSize+1}px; font-weight:bold; background:#f2f2f2;">${esc(q.sectionLabel)}</td></tr>`;
+      i += 1;
+      continue;
+    }
+
+    // collect a group of consecutive questions sharing the same non-null groupId
+    let group = [q];
+    if(q.groupId){
+      let j = i+1;
+      while(j < totalQ && !state.questions[j].isSection && state.questions[j].groupId === q.groupId){ group.push(state.questions[j]); j++; }
+    }
+    const isGroup = group.length > 1;
+    const heightVal = q.answerBoxHeight!=null && q.answerBoxHeight!=='' ? q.answerBoxHeight : d.rowMinHeight;
+    visibleNum += 1;
+
+    let numHtml, qHtml, scoreHtml, answerHtml;
+    if(!isGroup){
+      const {body, answerText} = renderQuestionBody(q);
+      let bodyFinal = body;
+      let answerCellHtml = '';
+      if(d.showAnswerColumn){
+        answerCellHtml = `<td style="${cellBase(d.answerColumn)}">${withAnswers?answerText:'&nbsp;'}</td>`;
+      } else if(withAnswers && answerText){
+        bodyFinal += `<p style="margin-top:6px;"><b>پاسخ: ${answerText}</b></p>`;
+      }
+      numHtml = `<td style="${numColStyle}">${toFa(visibleNum)}</td>`;
+      qHtml = `<td style="${qColStyle} height:${heightVal}mm;">${bodyFinal}</td>`;
+      scoreHtml = `<td style="${scoreColStyle}">${toFa(q.score)}</td>`;
+      answerHtml = answerCellHtml;
+    } else {
+      // grouped: stacked vertically inside one shared cell, no dividers between them.
+      // The whole group counts as ONE row number; items inside are labeled الف/ب/ج...
+      const miniRows = group.map((gq,gi)=>{
+        const label = toFa(gi+1)+')';
+        const {body, answerText} = renderQuestionBody(gq, label);
+        let inner = body;
+        if(withAnswers && answerText && !d.showAnswerColumn){ inner += `<p style="margin-top:4px;"><b>پاسخ: ${answerText}</b></p>`; }
+        const topSpacing = gi>0 ? 'margin-top:14px;' : '';
+        return `<div style="${topSpacing}">${inner}</div>`;
+      }).join('');
+      const groupScore = Math.round(group.reduce((s,gq)=>s+(+gq.score||0),0)*100)/100;
+      numHtml = `<td style="${numColStyle}">${toFa(visibleNum)}</td>`;
+      // No fixed height here — let it grow to fit all stacked items naturally
+      // so nothing gets clipped or overflows the cell.
+      qHtml = `<td style="${qColStyle}">${miniRows}</td>`;
+      scoreHtml = `<td style="${scoreColStyle}">${toFa(groupScore)}</td>`;
+      if(d.showAnswerColumn){
+        const answers = group.map((gq,gi)=>`${toFa(gi+1)}) ${renderQuestionBody(gq).answerText}`).filter(Boolean);
+        // NOTE: answerText already contains safely-escaped question text plus any
+        // <img>/<br> markup for the explanation image — do not esc() it again here,
+        // that would turn the image tag into visible raw text instead of a picture.
+        answerHtml = `<td style="${cellBase(d.answerColumn)}">${withAnswers?answers.join('<br>| '):'&nbsp;'}</td>`;
+      } else { answerHtml = ''; }
+      // The whole group only takes up ONE number in the row numbering sequence.
+    }
+
+    rowsHtml += `<tr>${numHtml}${qHtml}${scoreHtml}${answerHtml}</tr>`;
+    i += group.length;
+    if(d.rowSpacing>0 && i<totalQ){
+      rowsHtml += `<tr><td colspan="${cols.length}" style="border:none; padding:0; height:${d.rowSpacing}mm;"></td></tr>`;
+    }
+  }
+
+  const qBlocks = `<table style="border-collapse:collapse; width:100%; table-layout:fixed; margin-top:14px;">${colgroup}${rowsHtml}</table>`;
+
+  return `<!DOCTYPE html><html lang="fa" dir="rtl"><head><meta charset="UTF-8">
+    <style>
+      @page{ size:${state.design.pageSize||'A4'}; margin:${state.design.pageMargin!=null?state.design.pageMargin:14}mm; }
+      body{${msoFontCss('Tahoma')} color:#111; padding:20px; ${state.design.showPageFooter?'padding-bottom:16mm;':''}}
+      table{border-collapse:collapse;}
+      h2{text-align:center; color:#0d3b66;}
+      p{margin:0 0 3px 0; line-height:1.5;}
+      img{max-width:100%;}
+      .examPageFooter{ position:fixed; bottom:0; left:0; right:0; text-align:center; font-size:11px; color:#333; border-top:1px solid #999; padding-top:4px; background:#fff; }
+      .examPageFooter .pn::after{ content: "صفحه " counter(page); }
+    </style></head><body>
+    <h2>برگه آزمون ${withAnswers?'(کلید پاسخ)':''}</h2>
+    ${buildHeaderGridHTML()}
+    ${qBlocks}
+    ${state.design.showPageFooter ? `<div class="examPageFooter">نام و نام‌خانوادگی: .................................................. &nbsp;&nbsp;|&nbsp;&nbsp; <span class="pn"></span></div>` : ''}
+    </body></html>`;
+}
+
+/* ============ DESIGN TAB (visual column editor) ============ */
+let selectedColKey = null;
+
+function allDesignCols(){
+  const d = state.design;
+  return d.showAnswerColumn ? [...d.columns, Object.assign({key:'answer'}, d.answerColumn)] : d.columns;
+}
+function getColByKey(key){
+  const d = state.design;
+  if(key==='answer') return d.answerColumn;
+  return d.columns.find(c=>c.key===key);
+}
+function normalizeWidths(){
+  const cols = allDesignCols();
+  const sum = cols.reduce((s,c)=>s+c.widthPct,0);
+  if(Math.abs(sum-100)>0.5){
+    const factor = 100/sum;
+    cols.forEach(c=>{ const target = getColByKey(c.key); target.widthPct = Math.round(target.widthPct*factor*10)/10; });
+  }
+}
+
+function renderDesignTab(){
+  normalizeWidths();
+  const d = state.design;
+  const cols = allDesignCols();
+  const wrap = document.getElementById('designTableWrap');
+  const bw = d.borderWidth+'px'; const bc = d.borderColor;
+  const pad = (d.cellPadding!=null?d.cellPadding:2)+'mm';
+  const rh = (d.rowMinHeight!=null?d.rowMinHeight:18)+'mm';
+  const sample1 = {num:'1', question:'نمونهٔ سوال اول برای پیش‌نمایش طرح شما...', score:'1', answer:'پاسخ ۱'};
+  const sample2 = {num:'2', question:'نمونهٔ سوال دوم — برای دیدن فاصلهٔ بین دو سطر...', score:'1', answer:'پاسخ ۲'};
+  const sampleRow = (sample)=> `<tr>
+      ${cols.map(c=>`<td data-col="${c.key}" style="cursor:pointer; border:${bw} solid ${bc}; padding:${pad}; text-align:${c.align}; vertical-align:top; font-family:${c.fontFamily},Tahoma; font-size:${c.fontSize}px; font-weight:${c.bold?'bold':'normal'}; color:${c.color}; background:${c.bg}; height:${rh};">${esc(sample[c.key]||'')}</td>`).join('')}
+    </tr>`;
+  const spacerRow = d.rowSpacing>0 ? `<tr><td colspan="${cols.length}" style="border:none; padding:0; height:${d.rowSpacing}mm;"></td></tr>` : '';
+
+  wrap.innerHTML = `<table id="designPreviewTable" style="border-collapse:collapse; width:100%; table-layout:fixed;">
+    <colgroup>${cols.map(c=>`<col style="width:${c.widthPct}%;">`).join('')}</colgroup>
+    <tr>
+      ${cols.map((c,ci)=>`<th data-col="${c.key}" style="position:relative; cursor:pointer; border:${bw} solid ${bc}; padding:${pad}; background:#f2f2f2; font-family:${c.fontFamily},Tahoma; font-size:${c.fontSize}px; font-weight:bold; ${selectedColKey===c.key?'outline:2px solid #1e6fa8; outline-offset:-2px;':''}">
+        ${esc(c.label)}
+        ${ci<cols.length-1?`<div class="col-resizer" data-idx="${ci}" style="position:absolute; top:0; bottom:0; left:-4px; width:8px; cursor:col-resize; z-index:5;"></div>`:''}
+      </th>`).join('')}
+    </tr>
+    ${sampleRow(sample1)}
+    ${spacerRow}
+    ${sampleRow(sample2)}
+  </table>`;
+
+  // click a column (header or cell) to select it
+  wrap.querySelectorAll('[data-col]').forEach(elx=>{
+    elx.addEventListener('click', e=>{
+      if(e.target.classList.contains('col-resizer')) return;
+      selectColumn(elx.dataset.col);
+    });
+  });
+  // drag-resize handles
+  wrap.querySelectorAll('.col-resizer').forEach(handle=>{
+    handle.addEventListener('pointerdown', e=>{
+      e.preventDefault(); e.stopPropagation();
+      const idx = +handle.dataset.idx; // boundary between cols[idx] and cols[idx+1]
+      const table = document.getElementById('designPreviewTable');
+      const tableWidthPx = table.getBoundingClientRect().width;
+      const colEls = table.querySelectorAll('colgroup col');
+      const startX = e.clientX;
+      const leftCol = getColByKey(cols[idx].key);
+      const rightCol = getColByKey(cols[idx+1].key);
+      const startLeftW = leftCol.widthPct, startRightW = rightCol.widthPct;
+      function onMove(ev){
+        const deltaPx = ev.clientX - startX;
+        // RTL: dragging left increases the column to the right visually; convert px delta to pct
+        const deltaPct = (deltaPx/tableWidthPx)*100;
+        let newLeft = startLeftW - deltaPct;
+        let newRight = startRightW + deltaPct;
+        if(newLeft<4) { newRight -= (4-newLeft); newLeft=4; }
+        if(newRight<4){ newLeft -= (4-newRight); newRight=4; }
+        leftCol.widthPct = Math.round(newLeft*10)/10;
+        rightCol.widthPct = Math.round(newRight*10)/10;
+        // Update the colgroup widths directly instead of destroying/rebuilding
+        // the whole table on every pixel of movement — rebuilding mid-drag was
+        // what made the drag feel broken/unresponsive.
+        if(colEls[idx]) colEls[idx].style.width = leftCol.widthPct+'%';
+        if(colEls[idx+1]) colEls[idx+1].style.width = rightCol.widthPct+'%';
+      }
+      function onUp(){
+        document.removeEventListener('pointermove', onMove);
+        document.removeEventListener('pointerup', onUp);
+        renderDesignTab();
+        saveDraft();
+      }
+      document.addEventListener('pointermove', onMove);
+      document.addEventListener('pointerup', onUp);
+    });
+  });
+}
+
+function selectColumn(key){
+  selectedColKey = key;
+  const c = getColByKey(key);
+  document.getElementById('colPanelCard').style.display = 'block';
+  document.getElementById('colPanelTitle').textContent = c.label;
+  document.getElementById('cpLabel').value = c.label;
+  document.getElementById('cpFont').value = c.fontFamily;
+  document.getElementById('cpSize').value = c.fontSize;
+  document.getElementById('cpAlign').value = c.align;
+  document.getElementById('cpColor').value = c.color;
+  document.getElementById('cpBg').value = c.bg;
+  document.getElementById('cpBold').checked = !!c.bold;
+  renderDesignTab();
+}
+['cpLabel','cpFont','cpSize','cpAlign','cpColor','cpBg','cpBold'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', ()=>{
+    if(!selectedColKey) return;
+    const c = getColByKey(selectedColKey);
+    c.label = document.getElementById('cpLabel').value;
+    c.fontFamily = document.getElementById('cpFont').value;
+    c.fontSize = +document.getElementById('cpSize').value;
+    c.align = document.getElementById('cpAlign').value;
+    c.color = document.getElementById('cpColor').value;
+    c.bg = document.getElementById('cpBg').value;
+    c.bold = document.getElementById('cpBold').checked;
+    document.getElementById('colPanelTitle').textContent = c.label;
+    renderDesignTab();
+    saveDraft();
+  });
+});
+
+function syncGeneralDesignUi(){
+  const d = state.design;
+  document.getElementById('dsBorderColor').value = d.borderColor;
+  document.getElementById('dsBorderWidth').value = d.borderWidth;
+  document.getElementById('dsRowHeight').value = d.rowMinHeight;
+  document.getElementById('dsCellPadding').value = d.cellPadding!=null ? d.cellPadding : 2;
+  document.getElementById('dsPageMargin').value = d.pageMargin!=null ? d.pageMargin : 14;
+  document.getElementById('dsPageSize').value = d.pageSize || 'A4';
+  document.getElementById('dsRowSpacing').value = d.rowSpacing!=null ? d.rowSpacing : 0;
+  document.getElementById('dsShowAnswerCol').checked = d.showAnswerColumn;
+  document.getElementById('dsShowPageFooter').checked = !!d.showPageFooter;
+  document.getElementById('hfFont').value = d.headerFont.fontFamily;
+  document.getElementById('hfSize').value = d.headerFont.fontSize;
+}
+['dsBorderColor','dsBorderWidth','dsRowHeight','dsCellPadding','dsPageMargin','dsPageSize','dsRowSpacing','dsShowAnswerCol','dsShowPageFooter','hfFont','hfSize'].forEach(id=>{
+  document.getElementById(id).addEventListener('input', ()=>{
+    const d = state.design;
+    d.borderColor = document.getElementById('dsBorderColor').value;
+    d.borderWidth = +document.getElementById('dsBorderWidth').value;
+    d.rowMinHeight = +document.getElementById('dsRowHeight').value;
+    d.cellPadding = +document.getElementById('dsCellPadding').value;
+    d.pageMargin = +document.getElementById('dsPageMargin').value;
+    d.pageSize = document.getElementById('dsPageSize').value;
+    d.rowSpacing = +document.getElementById('dsRowSpacing').value;
+    d.showAnswerColumn = document.getElementById('dsShowAnswerCol').checked;
+    d.showPageFooter = document.getElementById('dsShowPageFooter').checked;
+    d.headerFont.fontFamily = document.getElementById('hfFont').value;
+    d.headerFont.fontSize = +document.getElementById('hfSize').value;
+    renderDesignTab();
+    saveDraft();
+  });
+});
+
+/* ---- templates ---- */
+function getTemplates(){ try{ return JSON.parse(AppStorage.getItem('tableTemplates'))||[]; }catch(e){ return []; } }
+function setTemplates(arr){
+  try{ AppStorage.setItem('tableTemplates', JSON.stringify(arr)); }
+  catch(e){ toast('⚠️ ذخیرهٔ طرح ناموفق بود؛ حافظهٔ مرورگر پر است.'); }
+}
+function renderTemplateSelect(){
+  const sel = document.getElementById('templateSelect');
+  const list = getTemplates();
+  sel.innerHTML = '<option value="">— هیچ‌کدام —</option>' + list.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('');
+}
+document.getElementById('btnSaveTemplate').addEventListener('click', ()=>{
+  const name = prompt('اسم این طرح را وارد کنید:');
+  if(!name) return;
+  const list = getTemplates();
+  list.push({id: uid(), name, design: JSON.parse(JSON.stringify(state.design))});
+  setTemplates(list);
+  renderTemplateSelect();
+  toast('طرح ذخیره شد ✓');
+});
+document.getElementById('btnLoadTemplate').addEventListener('click', ()=>{
+  const id = document.getElementById('templateSelect').value;
+  if(!id){ toast('یک طرح انتخاب کنید'); return; }
+  const t = getTemplates().find(x=>x.id===id);
+  if(!t) return;
+  state.design = JSON.parse(JSON.stringify(t.design));
+  selectedColKey = null;
+  document.getElementById('colPanelCard').style.display = 'none';
+  syncGeneralDesignUi();
+  renderDesignTab();
+  saveDraft();
+  toast('طرح بارگذاری شد ✓');
+});
+document.getElementById('btnDeleteTemplate').addEventListener('click', ()=>{
+  const id = document.getElementById('templateSelect').value;
+  if(!id){ toast('یک طرح انتخاب کنید'); return; }
+  if(!confirm('حذف این طرح قطعی است، ادامه می‌دهید؟')) return;
+  setTemplates(getTemplates().filter(x=>x.id!==id));
+  renderTemplateSelect();
+  toast('طرح حذف شد ✓');
+});
+document.getElementById('btnRenameTemplate').addEventListener('click', ()=>{
+  const id = document.getElementById('templateSelect').value;
+  if(!id){ toast('یک طرح انتخاب کنید'); return; }
+  const list = getTemplates();
+  const t = list.find(x=>x.id===id);
+  if(!t) return;
+  const name = prompt('اسم جدید طرح را وارد کنید:', t.name);
+  if(!name) return;
+  t.name = name;
+  setTemplates(list);
+  renderTemplateSelect();
+  document.getElementById('templateSelect').value = id;
+  toast('اسم طرح تغییر کرد ✓');
+});
+document.getElementById('btnDuplicateTemplate').addEventListener('click', ()=>{
+  const id = document.getElementById('templateSelect').value;
+  if(!id){ toast('یک طرح انتخاب کنید'); return; }
+  const list = getTemplates();
+  const t = list.find(x=>x.id===id);
+  if(!t) return;
+  const copy = {id: uid(), name: t.name + ' (کپی)', design: JSON.parse(JSON.stringify(t.design))};
+  list.push(copy);
+  setTemplates(list);
+  renderTemplateSelect();
+  document.getElementById('templateSelect').value = copy.id;
+  toast('طرح کپی شد ✓');
+});
+document.getElementById('btnResetTemplate').addEventListener('click', ()=>{
+  if(!confirm('طرح فعلی به حالت پیش‌فرض برمی‌گردد، ادامه می‌دهید؟')) return;
+  state.design = JSON.parse(JSON.stringify(DEFAULT_DESIGN));
+  selectedColKey = null;
+  document.getElementById('colPanelCard').style.display = 'none';
+  syncGeneralDesignUi();
+  renderDesignTab();
+  saveDraft();
+  toast('طرح پیش‌فرض اعمال شد ✓');
+});
+
+document.getElementById('btnPreview').addEventListener('click', ()=>{
+  openModal(`<h3>پیش‌نمایش آزمون</h3><div style="border:1px solid #ddd;border-radius:8px;overflow:hidden;"><iframe style="width:100%;height:60vh;border:none;" srcdoc="${esc(toFaHtmlString(buildExamHTML(false)))}"></iframe></div><div class="actions-bar"><button class="secondary" onclick="document.getElementById('modalBg').classList.remove('show')">بستن</button></div>`);
+});
+function exportPdf(withAnswers){
+  const html = toFaHtmlString(buildExamHTML(withAnswers));
+  const w = window.open('', '_blank');
+  if(!w){ toast('اجازه بازکردن پنجره داده نشد'); return; }
+  w.document.open(); w.document.write(html); w.document.close();
+  // Wait for every embedded image (question/teacher/explanation images) to actually
+  // finish decoding before printing — otherwise, on a slower device or with several
+  // large photos, print() can fire while an image is still loading and it comes out
+  // blank in the PDF. Falls back to printing anyway after 4s so one broken image
+  // link can't block the whole export forever.
+  function waitForImagesThenPrint(){
+    const imgs = Array.from(w.document.images || []);
+    const pending = imgs.filter(img => !img.complete);
+    if(!pending.length){ w.focus(); w.print(); return; }
+    let done = 0;
+    const finish = ()=>{ done++; if(done>=pending.length){ w.focus(); w.print(); } };
+    pending.forEach(img=>{ img.addEventListener('load', finish, {once:true}); img.addEventListener('error', finish, {once:true}); });
+    setTimeout(()=>{ w.focus(); w.print(); }, 4000);
+  }
+  setTimeout(waitForImagesThenPrint, 150);
+}
+// Word's "open an HTML file renamed to .doc" filter does not reliably render
+// <img src="data:..."> base64 images — they show up blank even though the
+// same HTML prints/PDFs fine in a real browser. The fix is to package the
+// document as MHTML (multipart/related): each image becomes its own MIME
+// part with a Content-ID, and the HTML references it as src="cid:...". This
+// is exactly the format browsers produce for "Save page as, single file",
+// and Word opens/renders it correctly even when saved with a .doc extension.
+function buildMhtmlDocument(htmlStr){
+  const boundary = '----MhtmlBoundary_' + Date.now().toString(36);
+  const parts = [];
+  let n = 0;
+  const htmlWithCids = htmlStr.replace(/src="data:(image\/[a-zA-Z0-9.+-]+);base64,([^"]+)"/g, (match, mime, b64)=>{
+    n++;
+    const cid = `img${n}@examexport.local`;
+    parts.push({cid, mime, b64});
+    return `src="cid:${cid}"`;
+  });
+
+  const wrapB64 = (s)=> s.replace(/(.{76})/g, '$1\r\n');
+
+  let out = 'MIME-Version: 1.0\r\n';
+  out += `Content-Type: multipart/related; boundary="${boundary}"; type="text/html"\r\n\r\n`;
+  out += `--${boundary}\r\n`;
+  out += 'Content-Type: text/html; charset="utf-8"\r\n';
+  out += 'Content-Transfer-Encoding: 8bit\r\n\r\n';
+  out += htmlWithCids + '\r\n\r\n';
+  parts.forEach(p=>{
+    out += `--${boundary}\r\n`;
+    out += `Content-Type: ${p.mime}\r\n`;
+    out += 'Content-Transfer-Encoding: base64\r\n';
+    out += `Content-Location: ${p.cid}\r\n`;
+    out += `Content-ID: <${p.cid}>\r\n\r\n`;
+    out += wrapB64(p.b64) + '\r\n\r\n';
+  });
+  out += `--${boundary}--\r\n`;
+  return out;
+}
+function exportWord(withAnswers){
+  const html = toFaHtmlString(buildExamHTML(withAnswers));
+  const mhtml = buildMhtmlDocument(html);
+  download(`exam_${withAnswers?'with-answers':'blank'}.doc`, mhtml, 'application/msword');
+}
+document.getElementById('btnPdfNoAns').addEventListener('click', ()=>exportPdf(false));
+document.getElementById('btnPdfAns').addEventListener('click', ()=>exportPdf(true));
+document.getElementById('btnDocNoAns').addEventListener('click', ()=>exportWord(false));
+document.getElementById('btnDocAns').addEventListener('click', ()=>exportWord(true));
+
+/* ============ HEADER FIELDS (simple list, like the online exam app) ============ */
+function renderHeaderFields(){
+  const c = document.getElementById('headerFieldsContainer');
+  if(!state.headerFields.length){
+    c.innerHTML = '<div class="empty-hint" style="grid-column:1/-1;">هنوز فیلدی اضافه نکرده\u200cاید. با دکمهٔ «افزودن فیلد دلخواه» شروع کنید.</div>';
+    return;
+  }
+  c.innerHTML = state.headerFields.map((f)=>{
+    let valueHtml;
+    if(f.type==='date'){
+      const parsed = parseJalaliStr(f.value) || jalaaliToday();
+      valueHtml = `<div><label>مقدار (تاریخ شمسی)</label>${jalaliDateSelectsHtml('hf_'+f.id, parsed.jy, parsed.jm, parsed.jd)}</div>`;
+    } else {
+      valueHtml = `<div class="grow"><label>مقدار</label><input type="${f.type}" autocomplete="off" class="fld-value" value="${esc(f.value)}"></div>`;
+    }
+    return `
+    <div class="field-box" data-id="${f.id}">
+      <div class="grow">
+        <label>برچسب فیلد</label>
+        <input type="text" autocomplete="off" class="fld-label" value="${esc(f.label)}">
+      </div>
+      ${valueHtml}
+      <div class="fb-actions">
+        <button class="ghost" data-act="up" title="بالا">↑</button>
+        <button class="ghost" data-act="down" title="پایین">↓</button>
+        <button class="ghost danger" data-act="del" title="حذف" style="color:#c0392b;">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+  state.headerFields.filter(f=>f.type==='date').forEach(f=>{
+    ['_y','_m','_d'].forEach(suf=>{
+      const sel = document.getElementById('hf_'+f.id+suf);
+      if(sel) sel.addEventListener('change', ()=>{
+        const j = readJalaliSelects('hf_'+f.id);
+        f.value = `${j.jy}/${j.jm}/${j.jd}`;
+        saveDraftDebounced();
+      });
+    });
+    if(!f.value){ const j = jalaaliToday(); f.value = `${j.jy}/${j.jm}/${j.jd}`; }
+  });
+}
+document.getElementById('headerFieldsContainer').addEventListener('input', e=>{
+  const box = e.target.closest('.field-box'); if(!box) return;
+  const f = state.headerFields.find(x=>x.id===box.dataset.id); if(!f) return;
+  if(e.target.classList.contains('fld-label')) f.label = e.target.value;
+  if(e.target.classList.contains('fld-value')) f.value = e.target.value;
+  saveDraftDebounced();
+});
+document.getElementById('headerFieldsContainer').addEventListener('click', e=>{
+  const btn = e.target.closest('button[data-act]'); if(!btn) return;
+  const box = e.target.closest('.field-box');
+  const idx = state.headerFields.findIndex(x=>x.id===box.dataset.id);
+  if(btn.dataset.act==='del'){ state.headerFields.splice(idx,1); }
+  if(btn.dataset.act==='up' && idx>0){ [state.headerFields[idx-1],state.headerFields[idx]]=[state.headerFields[idx],state.headerFields[idx-1]]; }
+  if(btn.dataset.act==='down' && idx<state.headerFields.length-1){ [state.headerFields[idx+1],state.headerFields[idx]]=[state.headerFields[idx],state.headerFields[idx+1]]; }
+  renderHeaderFields(); saveDraft();
+});
+document.getElementById('btnAddField').addEventListener('click', ()=>{
+  const type = document.getElementById('newFieldType').value;
+  state.headerFields.push({id:uidHf(), label:'فیلد جدید', value:'', type, removable:true});
+  renderHeaderFields(); saveDraft();
+});
+document.getElementById('btnClearHeaderFields').addEventListener('click', ()=>{
+  if(!state.headerFields.length){ toast('سربرگ الان هم خالیه'); return; }
+  if(!confirm('همهٔ فیلدهای سربرگ پاک می\u200cشوند. ادامه می\u200cدهید؟')) return;
+  state.headerFields = [];
+  renderHeaderFields(); saveDraft();
+  toast('سربرگ خالی شد ✓');
+});
+document.getElementById('headerFieldsPerRowSelect').addEventListener('change', e=>{
+  state.headerFieldsPerRow = +e.target.value;
+  saveDraft();
+});
+
+/* ============ HEADER GRID DESIGNER (freeform, merge/split like Word) ============ */
+let headerMergeMode = false;
+let headerSelectedCells = new Set(); // "r,c"
+let headerFocusedCell = null; // "r,c" of last clicked cell (for split)
+
+function renderHeaderGrid(){
+  const grid = state.headerGrid;
+  const d = state.design;
+  const hf = d.headerFont;
+  const bw = d.borderWidth+'px'; const bc = d.borderColor;
+  const wrap = document.getElementById('headerGridWrap');
+  let html = '<table style="border-collapse:collapse; width:100%;">';
+  for(let r=0;r<grid.rows;r++){
+    html += '<tr>';
+    for(let c=0;c<grid.cols;c++){
+      const cell = grid.cells[r][c];
+      if(cell.hidden) continue;
+      const key = r+','+c;
+      const isSel = headerSelectedCells.has(key);
+      html += `<td data-r="${r}" data-c="${c}" rowspan="${cell.rowspan}" colspan="${cell.colspan}"
+        contenteditable="true" data-cell="1"
+        style="border:${bw} solid ${bc}; padding:8px; min-width:60px; text-align:${cell.align}; font-family:${hf.fontFamily},Tahoma; font-size:${hf.fontSize}px; font-weight:${cell.bold?'bold':'normal'}; cursor:${headerMergeMode?'pointer':'text'}; ${isSel?'outline:2px solid #1e6fa8; outline-offset:-2px; background:#eaf2f8;':''}">${esc(cell.content)}</td>`;
+    }
+    html += '</tr>';
+  }
+  html += '</table>';
+  wrap.innerHTML = html;
+
+  wrap.querySelectorAll('[data-cell]').forEach(td=>{
+    const r = +td.dataset.r, c = +td.dataset.c;
+    const key = r+','+c;
+    if(headerMergeMode){
+      td.addEventListener('click', (e)=>{
+        e.preventDefault();
+        if(headerSelectedCells.has(key)) headerSelectedCells.delete(key); else headerSelectedCells.add(key);
+        renderHeaderGrid();
+      });
+    } else {
+      td.addEventListener('focus', ()=>{ headerFocusedCell = key; });
+      td.addEventListener('input', ()=>{
+        grid.cells[r][c].content = td.textContent;
+        saveDraftDebounced();
+      });
+    }
+  });
+  document.getElementById('headerGridHint').textContent = headerMergeMode
+    ? 'حالت انتخاب فعال است: روی خانه‌های موردنظر بزنید (باید یک مستطیل کامل تشکیل بدهند)، بعد «ادغام» را بزنید.'
+    : '';
+}
+document.getElementById('btnAddHeaderRow').addEventListener('click', ()=>{
+  const grid = state.headerGrid;
+  grid.cells.push(Array.from({length:grid.cols}, ()=>makeCell('')));
+  grid.rows++;
+  renderHeaderGrid(); saveDraft();
+});
+document.getElementById('btnRemoveHeaderRow').addEventListener('click', ()=>{
+  const grid = state.headerGrid;
+  if(grid.rows<=1){ toast('حداقل یک ردیف باید باقی بماند'); return; }
+  grid.cells.pop();
+  grid.rows--;
+  renderHeaderGrid(); saveDraft();
+});
+document.getElementById('btnAddHeaderCol').addEventListener('click', ()=>{
+  const grid = state.headerGrid;
+  grid.cells.forEach(row=>row.push(makeCell('')));
+  grid.cols++;
+  renderHeaderGrid(); saveDraft();
+});
+document.getElementById('btnRemoveHeaderCol').addEventListener('click', ()=>{
+  const grid = state.headerGrid;
+  if(grid.cols<=1){ toast('حداقل یک ستون باید باقی بماند'); return; }
+  grid.cells.forEach(row=>row.pop());
+  grid.cols--;
+  renderHeaderGrid(); saveDraft();
+});
+document.getElementById('btnHeaderMergeMode').addEventListener('click', ()=>{
+  headerMergeMode = !headerMergeMode;
+  headerSelectedCells.clear();
+  renderHeaderGrid();
+});
+document.getElementById('btnHeaderMerge').addEventListener('click', ()=>{
+  const grid = state.headerGrid;
+  if(headerSelectedCells.size<2){ toast('حداقل ۲ خانه انتخاب کنید'); return; }
+  const coords = [...headerSelectedCells].map(k=>k.split(',').map(Number));
+  const rs = coords.map(x=>x[0]), cs = coords.map(x=>x[1]);
+  const minR=Math.min(...rs), maxR=Math.max(...rs), minC=Math.min(...cs), maxC=Math.max(...cs);
+  const expectedCount = (maxR-minR+1)*(maxC-minC+1);
+  if(expectedCount !== headerSelectedCells.size){ toast('خانه‌های انتخاب‌شده باید یک مستطیل کامل تشکیل بدهند'); return; }
+  for(let r=minR;r<=maxR;r++) for(let c=minC;c<=maxC;c++){
+    if(grid.cells[r][c].rowspan>1 || grid.cells[r][c].colspan>1 || grid.cells[r][c].hidden){ toast('یکی از خانه‌ها قبلاً ادغام شده؛ ابتدا آن را جدا کنید'); return; }
+  }
+  const topLeft = grid.cells[minR][minC];
+  let combinedText = [];
+  for(let r=minR;r<=maxR;r++) for(let c=minC;c<=maxC;c++){
+    if(r===minR && c===minC) continue;
+    if(grid.cells[r][c].content) combinedText.push(grid.cells[r][c].content);
+    grid.cells[r][c].hidden = true;
+    grid.cells[r][c].content = '';
+  }
+  topLeft.rowspan = maxR-minR+1;
+  topLeft.colspan = maxC-minC+1;
+  if(combinedText.length) topLeft.content = (topLeft.content? topLeft.content+' ' : '') + combinedText.join(' ');
+  headerSelectedCells.clear();
+  headerMergeMode = false;
+  renderHeaderGrid(); saveDraft();
+  toast('ادغام شد ✓');
+});
+document.getElementById('btnHeaderSplit').addEventListener('click', ()=>{
+  if(!headerFocusedCell){ toast('اول روی خانهٔ ادغام‌شده کلیک کنید'); return; }
+  const [r,c] = headerFocusedCell.split(',').map(Number);
+  const grid = state.headerGrid;
+  const cell = grid.cells[r][c];
+  if(cell.rowspan<=1 && cell.colspan<=1){ toast('این خانه ادغام‌شده نیست'); return; }
+  for(let rr=r; rr<r+cell.rowspan; rr++) for(let cc=c; cc<c+cell.colspan; cc++){
+    if(rr===r && cc===c) continue;
+    grid.cells[rr][cc].hidden = false;
+  }
+  cell.rowspan = 1; cell.colspan = 1;
+  renderHeaderGrid(); saveDraft();
+  toast('جدا شد ✓');
+});
+document.getElementById('btnHeaderSplitParts').addEventListener('click', ()=>{
+  if(!headerFocusedCell){ toast('اول روی خانه‌ای که می‌خواهید تقسیم شود کلیک کنید'); return; }
+  const [r,c] = headerFocusedCell.split(',').map(Number);
+  const grid = state.headerGrid;
+  const cell = grid.cells[r][c];
+  if(cell.hidden){ toast('این خانه بخشی از یک ادغام دیگر است؛ اول آن ادغام را جدا کنید'); return; }
+  if(cell.rowspan>1 || cell.colspan>1){ toast('این خانه از قبل ادغام شده؛ اول با «جداسازی» آن را به حالت عادی برگردانید'); return; }
+  const nRaw = prompt('این خانه به چند بخش تقسیم شود؟ (فقط همین ردیف تقسیم می‌شود؛ ردیف‌های دیگر دست‌نخورده می‌مانند)', '2');
+  const n = parseInt(nRaw, 10);
+  if(!n || n<2 || n>8){ toast('عددی بین ۲ تا ۸ وارد کنید'); return; }
+  const insertCount = n-1;
+  // Guard: every OTHER row's cell at this column must be a plain, unhidden
+  // cell (not itself hidden by, or the anchor of, a merge that overlaps this
+  // column) — otherwise we can't safely widen it to cover the new columns.
+  for(let rr=0; rr<grid.rows; rr++){
+    if(rr===r) continue;
+    const other = grid.cells[rr][c];
+    if(other.hidden){ toast(`ردیف ${toFa(rr+1)} در این ستون بخشی از یک ادغام دیگر است؛ اول آن را جدا کنید.`); return; }
+  }
+  // Insert insertCount new columns right after column c, in every row.
+  for(let rr=0; rr<grid.rows; rr++){
+    const newCells = Array.from({length:insertCount}, ()=>makeCell(''));
+    grid.cells[rr].splice(c+1, 0, ...newCells);
+  }
+  grid.cols += insertCount;
+  // Every other row keeps its original look: its cell at column c now spans
+  // across the newly inserted columns too, and those new positions are hidden.
+  for(let rr=0; rr<grid.rows; rr++){
+    if(rr===r) continue;
+    grid.cells[rr][c].colspan = (grid.cells[rr][c].colspan||1) + insertCount;
+    for(let i=1;i<=insertCount;i++){ grid.cells[rr][c+i].hidden = true; }
+  }
+  // Row r is the one actually being split: its new cells stay separate (colspan 1, visible).
+  headerFocusedCell = null;
+  renderHeaderGrid(); saveDraft();
+  toast(`این خانه به ${toFa(n)} بخش تقسیم شد ✓`);
+});
+document.getElementById('useHeaderGridToggle').addEventListener('change', e=>{
+  state.useHeaderGrid = e.target.checked;
+  saveDraft();
+});
+
+/* ---- header image upload (alternative to the field list) ---- */
+function syncHeaderImageUi(){
+  const box = document.getElementById('headerImagePreviewBox');
+  if(state.headerImage){
+    box.style.display = 'block';
+    document.getElementById('headerImagePreview').src = state.headerImage;
+    document.getElementById('useHeaderImageToggle').checked = !!state.useHeaderImage;
+  } else {
+    box.style.display = 'none';
+  }
+}
+document.getElementById('headerImageInput').addEventListener('change', async e=>{
+  const f = e.target.files[0]; if(!f) return;
+  try{
+    state.headerImage = await compressImageFile(f, 1000, 0.85);
+    state.useHeaderImage = true;
+    syncHeaderImageUi();
+    saveDraft();
+    toast('تصویر سربرگ اضافه شد ✓');
+  }catch(err){ toast(err.message || 'خطا در پردازش تصویر'); }
+});
+document.getElementById('useHeaderImageToggle').addEventListener('change', e=>{
+  state.useHeaderImage = e.target.checked;
+  saveDraft();
+});
+document.getElementById('btnRemoveHeaderImage').addEventListener('click', ()=>{
+  state.headerImage = null;
+  state.useHeaderImage = false;
+  document.getElementById('headerImageInput').value = '';
+  syncHeaderImageUi();
+  saveDraft();
+  toast('تصویر سربرگ حذف شد');
+});
+
+/* ---- design presets ---- */
+const SAMPLE_STYLE_DESIGN = {
+  columns: [
+    {key:'num', label:'ردیف', widthPct:8, fontFamily:'Tahoma', fontSize:13, bold:false, color:'#000000', bg:'#ffffff', align:'center'},
+    {key:'question', label:'سوالات', widthPct:82, fontFamily:'Tahoma', fontSize:14, bold:false, color:'#000000', bg:'#ffffff', align:'right'},
+    {key:'score', label:'نمره', widthPct:10, fontFamily:'Tahoma', fontSize:13, bold:false, color:'#000000', bg:'#ffffff', align:'center'}
+  ],
+  showAnswerColumn: false,
+  answerColumn: {label:'پاسخ', widthPct:8, fontFamily:'Tahoma', fontSize:13, bold:false, color:'#000000', bg:'#ffffff', align:'right'},
+  borderColor:'#000000', borderWidth:1,
+  rowMinHeight:22, cellPadding:2, rowSpacing:0, pageMargin:14,
+  headerFont: {fontFamily:'Tahoma', fontSize:13, bold:false}
+};
+document.getElementById('btnApplySampleStyle').addEventListener('click', ()=>{
+  if(!confirm('طرح فعلی جدول با قالب نمونه جایگزین می‌شود (سربرگ و سوالات دست‌نخورده می‌مانند). ادامه می‌دهید؟')) return;
+  state.design = JSON.parse(JSON.stringify(SAMPLE_STYLE_DESIGN));
+  selectedColKey = null;
+  document.getElementById('colPanelCard').style.display = 'none';
+  syncGeneralDesignUi(); renderDesignTab(); saveDraft();
+  toast('قالب نمونه اعمال شد ✓');
+});
+document.getElementById('btnApplyCompactMode').addEventListener('click', ()=>{
+  if(!confirm('برای کمترین مصرف کاغذ، فونت‌ها کوچیک‌تر و فاصله‌ها کمینه می‌شوند. ادامه می‌دهید؟')) return;
+  const d = state.design;
+  d.columns.forEach(c=>{ c.fontSize = Math.max(10, c.fontSize-2); });
+  d.answerColumn.fontSize = Math.max(10, d.answerColumn.fontSize-2);
+  d.headerFont.fontSize = Math.max(10, d.headerFont.fontSize-2);
+  d.rowMinHeight = 10;
+  d.cellPadding = 1;
+  d.rowSpacing = 0;
+  d.pageMargin = 8;
+  selectedColKey = null;
+  document.getElementById('colPanelCard').style.display = 'none';
+  syncGeneralDesignUi(); renderDesignTab(); saveDraft();
+  toast('حالت فشرده اعمال شد ✓');
+});
+
+/* ---- question-row custom columns (add/remove beyond num/question/score) ---- */
+document.getElementById('btnAddQCol').addEventListener('click', ()=>{
+  const d = state.design;
+  const n = d.columns.filter(c=>c.key.indexOf('custom')===0).length + 1;
+  d.columns.push({key:'custom'+n, label:'ستون '+(d.columns.length+1), widthPct:10, fontFamily:'Tahoma', fontSize:13, bold:false, color:'#000000', bg:'#ffffff', align:'center'});
+  renderDesignTab(); saveDraft();
+});
+document.getElementById('btnRemoveQCol').addEventListener('click', ()=>{
+  const d = state.design;
+  const idx = d.columns.map(c=>c.key).lastIndexOf(d.columns.filter(c=>c.key.indexOf('custom')===0).map(c=>c.key).pop());
+  const customCols = d.columns.filter(c=>c.key.indexOf('custom')===0);
+  if(!customCols.length){ toast('ستون سفارشی‌ای برای حذف وجود ندارد'); return; }
+  const lastCustomKey = customCols[customCols.length-1].key;
+  d.columns = d.columns.filter(c=>c.key!==lastCustomKey);
+  if(selectedColKey===lastCustomKey){ selectedColKey=null; document.getElementById('colPanelCard').style.display='none'; }
+  renderDesignTab(); saveDraft();
+});
+
+/* ============ SAVED EXAM PROJECTS (whole-exam save/load) ============ */
+function getProjects(){ try{ return JSON.parse(AppStorage.getItem('examProjects'))||[]; }catch(e){ return []; } }
+function setProjects(arr){
+  try{ AppStorage.setItem('examProjects', JSON.stringify(arr)); }
+  catch(e){ toast('⚠️ ذخیرهٔ پروژه ناموفق بود؛ حافظهٔ مرورگر پر است. یک نسخهٔ پشتیبان بگیرید و چند پروژهٔ قدیمی را پاک کنید.'); }
+}
+function renderProjectSelect(){
+  const sel = document.getElementById('projectSelect');
+  const list = getProjects();
+  sel.innerHTML = '<option value="">— هیچ‌کدام —</option>' + list.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
+}
+document.getElementById('btnSaveProject').addEventListener('click', ()=>{
+  const name = prompt('اسم این آزمون را برای ذخیره وارد کنید:');
+  if(!name) return;
+  const list = getProjects();
+  list.push({id: uid(), name, savedAt: Date.now(), data: JSON.parse(JSON.stringify(state))});
+  setProjects(list);
+  renderProjectSelect();
+  toast('کل آزمون ذخیره شد ✓');
+});
+document.getElementById('btnLoadProject').addEventListener('click', ()=>{
+  const id = document.getElementById('projectSelect').value;
+  if(!id){ toast('یک آزمون ذخیره‌شده را انتخاب کنید'); return; }
+  const p = getProjects().find(x=>x.id===id);
+  if(!p) return;
+  if(!confirm('بارگذاری این آزمون، آزمونی که الان در حال طراحی آن هستید را جایگزین می‌کند. ادامه می‌دهید؟')) return;
+  state = JSON.parse(JSON.stringify(p.data));
+  selectedColKey = null;
+  document.getElementById('colPanelCard').style.display = 'none';
+  renderAll();
+  saveDraft();
+  toast('آزمون بارگذاری شد ✓');
+});
+document.getElementById('btnDeleteProject').addEventListener('click', ()=>{
+  const id = document.getElementById('projectSelect').value;
+  if(!id){ toast('یک آزمون ذخیره‌شده را انتخاب کنید'); return; }
+  if(!confirm('حذف این آزمون ذخیره‌شده قطعی است، ادامه می‌دهید؟')) return;
+  setProjects(getProjects().filter(x=>x.id!==id));
+  renderProjectSelect();
+  toast('حذف شد ✓');
+});
+
+/* ============ BANK ============ */
+function getBank(){ try{ return JSON.parse(AppStorage.getItem('questionBank'))||[]; }catch(e){ return []; } }
+function setBank(arr){
+  try{ AppStorage.setItem('questionBank', JSON.stringify(arr)); }
+  catch(e){ toast('⚠️ ذخیرهٔ بانک سوالات ناموفق بود؛ حافظهٔ مرورگر پر است. یک نسخهٔ پشتیبان بگیرید و چند سوال قدیمی را پاک کنید.'); }
+}
+function addToBank(q){
+  // Guess a starting subject from a header field that looks like it holds
+  // one (e.g. "نام درس"), but always let the teacher confirm/edit it —
+  // silently trusting the guess made the bank hard to browse later, since
+  // questions could end up filed under an empty or wrong subject.
+  const guessedSubj = (state.headerFields.find(f=>f.label.indexOf('درس')>=0)||{}).value || '';
+  const subj = prompt('این سوال زیر چه درس/موضوعی در بانک سوالات دسته‌بندی شود؟', guessedSubj);
+  if(subj===null) return; // teacher cancelled — don't add
+  const bank = getBank();
+  const j = jalaaliToday();
+  const date = `${j.jy}/${j.jm}/${j.jd}`;
+  bank.push(Object.assign({}, q, {id: uid(), bankSubject: subj.trim(), bankDate: date}));
+  setBank(bank);
+  renderBankList();
+  toast('به بانک سوالات اضافه شد (درس: '+(subj.trim()||'بدون‌درس')+') ✓');
+}
+function distinctBankSubjects(bank){
+  const set = new Set(bank.map(q=>q.bankSubject||'بدون‌درس'));
+  return [...set].sort((a,b)=>a.localeCompare(b,'fa'));
+}
+function renderBankList(){
+  const bank = getBank();
+  const text = document.getElementById('bankSearchText').value.trim();
+  const type = document.getElementById('bankSearchType').value;
+
+  // Keep the subject dropdown in sync with what's actually in the bank —
+  // built from real data instead of free-typed text, so filtering can't
+  // miss questions due to a typo/inconsistent spelling.
+  const subjSel = document.getElementById('bankSearchSubject');
+  const subjects = distinctBankSubjects(bank);
+  const prevVal = subjSel.value;
+  subjSel.innerHTML = '<option value="">همهٔ درس‌ها</option>' + subjects.map(s=>
+    `<option value="${esc(s)}">${esc(s)} (${bank.filter(q=>(q.bankSubject||'بدون‌درس')===s).length})</option>`
+  ).join('');
+  if(subjects.includes(prevVal)) subjSel.value = prevVal;
+  const subjFilter = subjSel.value;
+
+  const list = document.getElementById('bankList');
+  if(!bank.length){ list.innerHTML = '<div class="empty-hint">هنوز سوالی به بانک اضافه نشده. از تب «سوالات»، کنار هر سوال دکمهٔ 🏦 را بزنید.</div>'; return; }
+
+  const filtered = bank.filter(q=>
+    (!text || (q.text||'').includes(text)) &&
+    (!type || q.type===type) &&
+    (!subjFilter || (q.bankSubject||'بدون‌درس')===subjFilter)
+  );
+  if(!filtered.length){ list.innerHTML = '<div class="empty-hint">سوالی با این فیلتر یافت نشد.</div>'; return; }
+
+  // Grouped by subject (collapsible) instead of one long flat list, so a
+  // bank with many questions across several subjects stays navigable.
+  const groups = {};
+  filtered.forEach(q=>{ const s=q.bankSubject||'بدون‌درس'; (groups[s]=groups[s]||[]).push(q); });
+  const subjectNames = Object.keys(groups).sort((a,b)=>a.localeCompare(b,'fa'));
+  const singleGroup = subjectNames.length===1;
+
+  list.innerHTML = subjectNames.map((subj,gi)=>`
+    <div class="card" style="padding:0;overflow:hidden;margin-bottom:10px;">
+      <div class="bank-group-header" data-gi="${gi}" style="cursor:pointer;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;background:#eaf2f8;">
+        <b>${esc(subj)}</b>
+        <span class="small bank-group-arrow" data-gi="${gi}">${groups[subj].length} سوال — ${singleGroup?'باز':'مشاهده'} ${singleGroup?'▴':'▾'}</span>
+      </div>
+      <div class="bank-group-body" data-gi="${gi}" style="display:${singleGroup?'block':'none'};padding:10px 16px 16px;">
+        ${groups[subj].map(q=>`
+          <div class="field-box" style="margin-bottom:8px;">
+            <div class="grow">
+              <span class="badge">${typeLabel(q.type)}</span> ${esc(questionSummaryText(q))}
+              <div class="small">تاریخ افزودن: ${esc(q.bankDate||'-')}</div>
+            </div>
+            <div class="fb-actions">
+              <button class="secondary" data-id="${q.id}">➕ افزودن به آزمون</button>
+              <button class="ghost" data-edit-subj-id="${q.id}">✏️ تغییر درس</button>
+              <button class="danger" data-del-id="${q.id}" title="حذف از بانک">🗑 حذف</button>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('');
+
+  list.querySelectorAll('.bank-group-header').forEach(h=>{
+    h.addEventListener('click', ()=>{
+      const gi = h.dataset.gi;
+      const subj = subjectNames[+gi];
+      const body = list.querySelector(`.bank-group-body[data-gi="${gi}"]`);
+      const arrow = list.querySelector(`.bank-group-arrow[data-gi="${gi}"]`);
+      const isOpen = body.style.display !== 'none';
+      body.style.display = isOpen ? 'none' : 'block';
+      arrow.textContent = `${groups[subj].length} سوال — ${isOpen?'مشاهده ▾':'باز ▴'}`;
+    });
+  });
+
+  list.querySelectorAll('button[data-id]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const q = bank.find(x=>x.id===btn.dataset.id);
+      const copy = Object.assign({}, q, {id: uid(), order: state.questions.length});
+      delete copy.bankSubject; delete copy.bankDate;
+      state.questions.push(copy);
+      renderQuestionsTable(); saveDraft();
+      toast('سوال به آزمون اضافه شد ✓');
+    });
+  });
+  list.querySelectorAll('button[data-edit-subj-id]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      const q = bank.find(x=>x.id===btn.dataset.editSubjId);
+      const newSubj = prompt('درس/موضوع جدید برای این سوال:', q.bankSubject||'');
+      if(newSubj===null) return;
+      q.bankSubject = newSubj.trim();
+      setBank(bank);
+      renderBankList();
+      toast('بروزرسانی شد ✓');
+    });
+  });
+  list.querySelectorAll('button[data-del-id]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      if(!confirm('این سوال از بانک سوالات حذف شود؟')) return;
+      deleteFromBank(btn.dataset.delId);
+    });
+  });
+}
+function deleteFromBank(id){
+  const bank = getBank().filter(q=>q.id!==id);
+  setBank(bank);
+  renderBankList();
+  toast('سوال از بانک حذف شد ✓');
+}
+document.getElementById('bankSearchText').addEventListener('input', debounce(renderBankList,250));
+document.getElementById('bankSearchType').addEventListener('change', renderBankList);
+document.getElementById('bankSearchSubject').addEventListener('change', renderBankList);
+
+/* ============ UTILS: bulk paste, backup/restore ============ */
+// Minimal, dependency-free .docx reader: docx is a ZIP archive containing
+// word/document.xml. We locate that entry in the ZIP central directory,
+// inflate it if needed (browser-native DecompressionStream, no libraries),
+// and pull the plain text out of the <w:t> runs, one line per paragraph.
+// Everything happens locally in the browser; the file is never uploaded anywhere.
+async function extractDocxText(arrayBuffer){
+  const bytes = new Uint8Array(arrayBuffer);
+  const dv = new DataView(arrayBuffer);
+  const EOCD_SIG = 0x06054b50, CD_SIG = 0x02014b50;
+  let eocdOffset = -1;
+  const searchStart = Math.max(0, bytes.length - 65557);
+  for(let i = bytes.length - 22; i >= searchStart; i--){
+    if(dv.getUint32(i, true) === EOCD_SIG){ eocdOffset = i; break; }
+  }
+  if(eocdOffset === -1) throw new Error('این فایل یک فایل Word معتبر (docx.) نیست.');
+  const cdCount = dv.getUint16(eocdOffset+10, true);
+  let ptr = dv.getUint32(eocdOffset+16, true);
+  let target = null;
+  for(let i=0;i<cdCount;i++){
+    if(dv.getUint32(ptr, true) !== CD_SIG) break;
+    const compMethod = dv.getUint16(ptr+10, true);
+    const compSize = dv.getUint32(ptr+20, true);
+    const nameLen = dv.getUint16(ptr+28, true);
+    const extraLen = dv.getUint16(ptr+30, true);
+    const commentLen = dv.getUint16(ptr+32, true);
+    const localHeaderOffset = dv.getUint32(ptr+42, true);
+    const name = new TextDecoder('utf-8').decode(bytes.slice(ptr+46, ptr+46+nameLen));
+    if(name === 'word/document.xml'){ target = {compMethod, compSize, localHeaderOffset}; break; }
+    ptr += 46 + nameLen + extraLen + commentLen;
+  }
+  if(!target) throw new Error('متن اصلی سند در این فایل Word پیدا نشد.');
+  const lh = target.localHeaderOffset;
+  const lhNameLen = dv.getUint16(lh+26, true);
+  const lhExtraLen = dv.getUint16(lh+28, true);
+  const dataStart = lh + 30 + lhNameLen + lhExtraLen;
+  const compData = bytes.slice(dataStart, dataStart + target.compSize);
+  let xmlBytes;
+  if(target.compMethod === 0){
+    xmlBytes = compData;
+  } else if(target.compMethod === 8){
+    if(typeof DecompressionStream === 'undefined') throw new Error('مرورگر شما از باز کردن فایل Word پشتیبانی نمی‌کند؛ لطفاً از یک مرورگر جدید (مثل Chrome یا Edge) استفاده کنید.');
+    const stream = new Blob([compData]).stream().pipeThrough(new DecompressionStream('deflate-raw'));
+    xmlBytes = new Uint8Array(await new Response(stream).arrayBuffer());
+  } else {
+    throw new Error('روش فشرده‌سازی این فایل Word پشتیبانی نمی‌شود.');
+  }
+  const xmlText = new TextDecoder('utf-8').decode(xmlBytes);
+  const doc = new DOMParser().parseFromString(xmlText, 'application/xml');
+  if(doc.getElementsByTagName('parsererror').length) throw new Error('خواندن محتوای فایل Word با خطا مواجه شد.');
+  const paragraphs = Array.from(doc.getElementsByTagName('w:p'));
+  const lines = paragraphs.map(p=>Array.from(p.getElementsByTagName('w:t')).map(t=>t.textContent).join(''));
+  return lines.map(l=>l.trim()).filter(Boolean).join('\n');
+}
+document.getElementById('fileWordUpload').addEventListener('change', async (e)=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  toast('در حال خواندن فایل Word...');
+  try{
+    const buf = await f.arrayBuffer();
+    const text = await extractDocxText(buf);
+    if(!text){ toast('متنی در این فایل Word پیدا نشد'); e.target.value=''; return; }
+    const area = document.getElementById('bulkPasteArea');
+    area.value = area.value ? (area.value.trim()+'\n'+text) : text;
+    toast('متن فایل Word در جعبهٔ بالا ریخته شد؛ آن را مرور و سپس «تبدیل» را بزنید ✓');
+  }catch(err){
+    toast(err.message || 'خواندن فایل Word با خطا مواجه شد');
+  }
+  e.target.value = '';
+});
+document.getElementById('btnBulkConvert').addEventListener('click', ()=>{
+  const raw = document.getElementById('bulkPasteArea').value;
+  const lines = raw.split(/\n+/).map(l=>l.trim()).filter(Boolean);
+  if(!lines.length){ toast('متنی برای تبدیل وارد نشده'); return; }
+  const counts = {blank:0, paren:0, essay:0};
+  lines.forEach(line=>{
+    let q;
+    if(/_{2,}/.test(line)){
+      // Line contains a ___ blank marker -> becomes a "جای خالی" question.
+      // Correct answer must still be filled in manually (can't be guessed from plain text).
+      q = {id:uid(), type:'blank', text:line, answer:'', score: state.defaultScore, order: state.questions.length};
+      counts.blank++;
+    } else if(/\([^()]*\/[^()]*\)/.test(line)){
+      // Line contains a parenthetical with slash-separated choices -> becomes a "پرانتزی" question.
+      // Correct choice must still be picked manually.
+      q = {id:uid(), type:'paren', text:line, answer:'', score: state.defaultScore, order: state.questions.length};
+      counts.paren++;
+    } else {
+      q = {id:uid(), type:'essay', text:line, score: state.defaultScore, keywords:'', teacherImage:null, order: state.questions.length};
+      counts.essay++;
+    }
+    state.questions.push(q);
+  });
+  document.getElementById('bulkPasteArea').value='';
+  renderQuestionsTable(); saveDraft();
+  const parts = [];
+  if(counts.blank) parts.push(`${counts.blank} جای‌خالی`);
+  if(counts.paren) parts.push(`${counts.paren} پرانتزی`);
+  if(counts.essay) parts.push(`${counts.essay} تشریحی`);
+  toast(`${lines.length} سوال اضافه شد (${parts.join('، ')}) — پاسخ صحیح سوالات جای‌خالی/پرانتزی را در فهرست سوالات تکمیل کنید ✓`);
+});
+document.getElementById('btnBackupJson').addEventListener('click', ()=>{
+  const backup = { state, bank: getBank(), projects: getProjects(), templates: getTemplates() };
+  download('پشتیبان_آزمون‌ساز.json', JSON.stringify(backup,null,2), 'application/json');
+});
+document.getElementById('fileRestore').addEventListener('change', e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=>{
+    try{
+      const data = JSON.parse(r.result);
+      if(data.state){ state = data.state; }
+      if(data.bank){ setBank(data.bank); }
+      if(data.projects){ setProjects(data.projects); }
+      if(data.templates){ setTemplates(data.templates); }
+      renderAll(); saveDraft();
+      toast('بازیابی با موفقیت انجام شد ✓');
+    }catch(err){ toast('فایل پشتیبان نامعتبر است'); }
+  };
+  r.readAsText(f);
+});
+document.getElementById('defaultScoreSetting').addEventListener('change', e=>{ state.defaultScore = +e.target.value; saveDraft(); });
+
+/* ============ RENDER ALL ============ */
+function renderAll(){
+  renderHeaderFields();
+  renderHeaderGrid();
+  syncHeaderImageUi();
+  document.getElementById('headerFieldsPerRowSelect').value = state.headerFieldsPerRow || 3;
+  document.getElementById('useHeaderGridToggle').checked = !!state.useHeaderGrid;
+  renderQuestionsTable();
+  syncGeneralDesignUi();
+  renderTemplateSelect();
+  renderProjectSelect();
+  document.getElementById('defaultScoreSetting').innerHTML = scoreOptions(state.defaultScore);
+  renderStorageUsage();
+}
+
+/* ============ THEME (light/dark) ============ */
+function applyTheme(theme){
+  document.documentElement.setAttribute('data-theme', theme);
+  document.getElementById('btnToggleTheme').textContent = theme==='dark' ? '☀️' : '🌙';
+  AppStorage.setItem('appTheme', theme);
+}
+document.getElementById('btnToggleTheme').addEventListener('click', ()=>{
+  const current = document.documentElement.getAttribute('data-theme')==='dark' ? 'light' : 'dark';
+  applyTheme(current);
+});
+/* ============ BOOT ============ */
+(async ()=>{
+  await AppStorage.ready();
+  applyTheme(AppStorage.getItem('appTheme') || 'light');
+  loadDraft();
+  renderAll();
+  setInterval(saveDraft, 8000);
+})();
+
+/* PWA service worker registration (works only when served over http/https) */
+if('serviceWorker' in navigator && location.protocol.startsWith('http')){
+  window.addEventListener('load', ()=>{ navigator.serviceWorker.register('service-worker.js').catch(()=>{}); });
+}
+
+})();
+</script>
+</body>
+</html>

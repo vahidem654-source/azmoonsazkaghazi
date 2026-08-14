@@ -1,0 +1,6 @@
+{
+  "name": "آزمون‌ساز کاغذی",
+  "description": "سامانه هوشمند ساخت، مدیریت و خروجی چاپی برگه آزمون‌های حضوری همراه با سربرگ استاندارد، بارم‌بندی، بانک سوالات و خروجی Word/پاسخ‌نامه",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
