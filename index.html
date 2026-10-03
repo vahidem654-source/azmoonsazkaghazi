@@ -42,7 +42,7 @@ nav button{flex:1;border:0;border-radius:0;justify-content:center;min-height:50p
 .qt{border-collapse:collapse;margin:4px 0}.qt td{border:1px solid #444;padding:3px 8px;min-width:46px}
 .ot,.mt{width:100%;border-collapse:collapse;table-layout:fixed}.ot td{vertical-align:top;padding:1px 4px}
 .mt td:nth-child(1){width:42%}.mt td:nth-child(2){width:14%;text-align:center}.mt td:nth-child(3){width:44%}.mt td{vertical-align:top;padding:2px 4px}
-.ln{border-bottom:1px dotted #888;height:1.7em}
+.ln{border-bottom:1px dotted #888;height:calc(1em*var(--ls,1.7))}.bl.a{font-weight:700;text-decoration:underline}
 .et{width:100%;border-collapse:collapse;table-layout:fixed}.et>thead>tr>th,.et>tbody>tr>td{border:1px solid #000;padding:4px 8px;vertical-align:top}.et>thead>tr>th{background:#e8e8e8;text-align:center}.et>thead>tr>th:nth-child(1),.et>tbody>tr>td:nth-child(1){width:9%;text-align:center}.et>thead>tr>th:nth-child(3),.et>tbody>tr>td:nth-child(3){width:12%;text-align:center}.et>tbody>tr{break-inside:avoid}
 .sum{background:var(--cd);border:1px solid var(--ln);border-radius:12px;padding:6px 12px;margin-bottom:10px;color:var(--ac);font-weight:700}
 #pp{display:none}#pp .paper{width:auto;padding:0}
@@ -60,9 +60,9 @@ nav button{flex:1;border:0;border-radius:0;justify-content:center;min-height:50p
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const fa=n=>String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]),esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])),uid=()=>Math.random().toString(36).slice(2,10);
-const LT='الف ب پ ت ث ج چ ح خ د ذ ر'.split(' '),lt=i=>LT[i]||fa(i+1),clone=o=>structuredClone(o);
+const LT='الف ب ج د ه و ز ح ط ی ک ل م ن س ع ف ص ق ر'.split(' '),lt=i=>LT[i]||fa(i+1),clone=o=>structuredClone(o);
 const TN={tf:'صحیح / غلط',blank:'جای‌خالی (نقطه‌چین)',mc:'چهارگزینه‌ای',paren:'گزینه‌ی صحیح در پرانتز',match:'وصل‌کردنی',desc:'تشریحی'};
-const NEW={tf:()=>({type:'tf',html:'',ok:true}),blank:()=>({type:'blank',html:''}),mc:()=>({type:'mc',html:'',opts:['','','',''],ok:0,lay:4,ans:''}),paren:()=>({type:'paren',html:'',opts:['',''],ok:0}),match:()=>({type:'match',html:'',A:['',''],B:['',''],map:[0,1]}),desc:()=>({type:'desc',html:'',ans:'',lines:0})};
+const NEW={tf:()=>({type:'tf',html:'',ok:true}),blank:()=>({type:'blank',html:'',blanks:[]}),mc:()=>({type:'mc',html:'',opts:['','','',''],ok:0,lay:4,ans:''}),paren:()=>({type:'paren',html:'',ans:''}),match:()=>({type:'match',html:'شماره‌ی مورد مرتبط از ستون راست را در پرانتز جلوی هر مورد ستون چپ بنویسید.',A:['',''],B:['',''],map:[0,1]}),desc:()=>({type:'desc',html:'',ans:'',lines:0})};
 const SYM='✓ ✗ ☐ ☑ ☒ × ÷ ± √ ∞ ≠ ≤ ≥ ≈ π ° ² ³ ½ ⅓ ¼ ¾ → ← ↑ ↓ ⇒ ⇔ ∠ ⊥ ∥ △ ∈ ∉ ∪ ∩ ⊂ ∅ ∑ α β γ θ λ μ Δ Ω « » ؟ ، ؛ … – • ★ ✦ ‰ ∴ ∵ ≡ ∝ ∫'.split(' ');
 let db,ex,exams=[],bank=[],T='ex',AN=0,ED=null,lastE=null,lastF=null,lastR=null,pt,BK={q:'',ty:'',s:''};
 const toast=t=>{const e=$('#ts');e.textContent=t;e.style.opacity=1;clearTimeout(e.t);e.t=setTimeout(()=>e.style.opacity=0,2400)};
@@ -75,20 +75,31 @@ function newExam(){ex={id:uid(),title:'آزمون جدید',rows:[],t:Date.now()
 const saveBlob=(b,n)=>{const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download=n;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),4000)};
 // ---------- helpers
 const strip=h=>{const d=document.createElement('div');d.innerHTML=h||'';return d.textContent};
-const prep=(h,a)=>(h||'').replace(/\[\[(.*?)\]\]/g,(m,x)=>a?`<span class="bl a">${x}</span>`:'<span class="bl">………………</span>');
-function lead(it,a){const t=prep(it.html,a);
+const R_DOTS=()=>/\.{3,}|…{2,}/g,nzb=x=>String(x==null?'':x).replace(/[\u200c\u200f\u200e\s]/g,'').replace(/ي/g,'ی').replace(/ك/g,'ک').toLowerCase(),LSV=()=>+ex.ls||1.7;
+function legacy(it){if(it.type=='blank'&&!it.blanks){const a=[];it.html=(it.html||'').replace(/\[\[(.*?)\]\]/g,(m,x)=>{a.push(strip(x));return'……………'});it.blanks=a}
+ if(it.type=='paren'&&it.opts&&it.ans==null){const o='( '+it.opts.join(' - ')+' )';it.html=(it.html||'').includes('{{}}')?it.html.replace('{{}}',o):(it.html||'')+' '+o;it.ans=it.opts[it.ok]||'';delete it.opts;delete it.ok}return it}
+const migr=e=>(e.rows||[]).forEach(r=>r.items.forEach(legacy));
+function mapDots(h,fn){const d=document.createElement('div');d.innerHTML=h||'';let i=0;const w=document.createTreeWalker(d,NodeFilter.SHOW_TEXT),ns=[];while(w.nextNode())ns.push(w.currentNode);
+ for(const n of ns){const t=n.nodeValue;if(t.search(R_DOTS())<0)continue;const fr=document.createDocumentFragment(),re=R_DOTS();let last=0,m;
+  while((m=re.exec(t))){fr.append(t.slice(last,m.index));const x=fn(i++,m[0]);if(typeof x=='string'){const sp=document.createElement('span');sp.innerHTML=x;fr.append(...sp.childNodes)}else fr.append(x);last=m.index+m[0].length}
+  fr.append(t.slice(last));n.replaceWith(fr)}return d.innerHTML}
+const fillB=(it,a)=>{const bl=it.blanks||[];return a?mapDots(it.html,(i,m)=>{if(!bl[i])return document.createTextNode(m);const sp=document.createElement('span');sp.className='bl a';sp.textContent=bl[i];return sp}):(it.html||'')};
+function markParen(h,ans){let hit=0;const out=(h||'').replace(/\(([^()<>]*)\)/g,(m,g)=>'('+g.split(/(\s*[-–—،\/|]\s*)/).map((p,i)=>{if(i%2||!ans)return p;const q=p.match(/^(\s*)([\s\S]*?)(\s*)$/);if(nzb(strip(q[2]))!=nzb(ans))return p;hit=1;return `${q[1]}<b><u>${q[2]}</u></b>${q[3]}`}).join('')+')');return hit||!ans?out:out+` <b><u>(${esc(ans)})</u></b>`}
+function lead(it,a){legacy(it);
+ if(it.type=='blank')return fillB(it,a);
+ if(it.type=='paren')return a?markParen(it.html,it.ans):(it.html||'');
+ const t=it.html||'';
  if(it.type=='tf')return t+` <span class="nb">(${a&&it.ok?'☒':'☐'} صحیح &nbsp; ${a&&!it.ok?'☒':'☐'} غلط)</span>`;
- if(it.type=='paren'){const o='( '+it.opts.map((x,i)=>a&&i==it.ok?`<b><u>${esc(x)}</u></b>`:esc(x)).join(' - ')+' )';return t.includes('{{}}')?t.replace('{{}}',o):t+' '+o}
  return t}
 const optCell=(it,k,a)=>{const o=it.opts[k];return o==null?'':(a&&k==it.ok?`<b><u>${fa(k+1)}) ${esc(o)}</u></b>`:`${fa(k+1)}) ${esc(o)}`)};
 function itemHtml(it,a){let h=lead(it,a);
  if(it.type=='mc'){const c=it.lay||4;let r='';for(let i=0;i<it.opts.length;i+=c)r+='<tr>'+Array.from({length:c},(_,j)=>`<td>${optCell(it,i+j,a)}</td>`).join('')+'</tr>';
   h+=`<table class="ot">${r}</table>`+(a?`<div class="an"><b>پاسخ:</b> گزینه‌ی ${fa(it.ok+1)}${it.ans?' — '+it.ans:''}</div>`:'')}
- if(it.type=='match'){let r='';const n=Math.max(it.A.length,it.B.length);for(let i=0;i<n;i++){const x=i<it.A.length;r+=`<tr><td>${x?fa(i+1)+'. '+esc(it.A[i]):''}</td><td>${x?'( '+(a?lt(it.map[i]):'&emsp;&emsp;')+' )':''}</td><td>${i<it.B.length?lt(i)+'. '+esc(it.B[i]):''}</td></tr>`}h+=`<table class="mt">${r}</table>`}
+ if(it.type=='match'){let r='';const n=Math.max(it.A.length,it.B.length),inv=j=>{const i=it.map.indexOf(j);return i>=0?fa(i+1):'—'};for(let i=0;i<n;i++){r+=`<tr><td>${i<it.A.length?fa(i+1)+'. '+esc(it.A[i]):''}</td><td>${i<it.B.length?'( '+(a?inv(i):'&emsp;&emsp;')+' )':''}</td><td>${i<it.B.length?esc(it.B[i]):''}</td></tr>`}h+=`<table class="mt">${r}</table>`}
  if(it.type=='desc')h+='<div class="ln"></div>'.repeat(it.lines||0)+(a?`<div class="an"><b>پاسخ:</b> ${it.ans||''}</div>`:'');
  return h}
 const sf=v=>fa(String(v).replace('.','٫')),total=()=>ex.rows.reduce((t,r)=>t+(+r.score||0),0);
-function cellHtml(r,a){const s=r.items,t=r.title?`<div>${esc(r.title)}</div>`:'';if(s.length==1)return t+itemHtml(s[0],a);return t+s.map((it,i)=>`<div class="s"><b>${fa(i+1)})</b> ${itemHtml(it,a)}</div>`).join('')}
+function cellHtml(r,a){const s=r.items,t=r.title?`<div>${esc(r.title)}</div>`:'';if(s.length==1)return t+itemHtml(s[0],a);return t+s.map((it,i)=>`<div class="s"><b>${lt(i)})</b> ${itemHtml(it,a)}</div>`).join('')}
 function paperHtml(a){return`<table class="et"><thead><tr><th>ردیف</th><th>سوالات</th><th>بارم</th></tr></thead><tbody>${ex.rows.map((r,i)=>`<tr><td>${fa(i+1)}</td><td>${cellHtml(r,a)}</td><td>${r.score?sf(r.score):''}</td></tr>`).join('')}${total()>0?`<tr><td colspan="2" style="text-align:center"><b>جمع بارم</b></td><td style="text-align:center"><b>${sf(total())}</b></td></tr>`:''}</tbody></table>`}
 // ---------- main views
 function find(id){for(let ri=0;ri<ex.rows.length;ri++){const r=ex.rows[ri],ii=r.items.findIndex(x=>x.id==id);if(ii>=0)return{r,ri,ii,it:r.items[ii]}}}
@@ -97,7 +108,7 @@ function render(){$('#ttl').value=ex.title;$$('nav button').forEach(b=>b.classLi
 function vEx(){if(!ex.rows.length)return'<div class="em">هنوز سؤالی نیست.<br>دکمه‌ی «＋ سؤال» را بزن.</div>';
  return `<div class="sum" id="sum">جمع بارم: ${sf(total())}</div>`+ex.rows.map((r,ri)=>`<section class="card" id="r_${r.id}"><div class="rh"><b>سوال ${fa(ri+1)}</b><input class="rtl" data-r="${r.id}" value="${esc(r.title)}" placeholder="دستور سؤال (اختیاری) مثلاً: جاهای خالی را پر کنید">
  <select class="sc" data-r="${r.id}" title="بارم">${scOpts(r)}</select><span class="acts"><button data-a="rup" data-r="${r.id}">↑</button><button data-a="rdn" data-r="${r.id}">↓</button>${ri?`<button data-a="mrg" data-r="${r.id}" title="ادغام با ردیف قبل">⇡ ادغام</button>`:''}<button data-a="rdel" data-r="${r.id}">🗑</button></span></div>
- ${r.items.map((it,ii)=>`<div class="it" id="i_${it.id}"><span class="tg">${r.items.length>1?fa(ii+1)+') ':''}${TN[it.type]}</span><span class="pv">${esc(strip(it.html).slice(0,90))||'(بدون متن)'}</span>
+ ${r.items.map((it,ii)=>`<div class="it" id="i_${it.id}"><span class="tg">${r.items.length>1?lt(ii)+') ':''}${TN[it.type]}</span><span class="pv">${esc(strip(it.html).slice(0,90))||'(بدون متن)'}</span>
  <span class="acts"><button data-a="ied" data-i="${it.id}">✎</button><button data-a="iup" data-i="${it.id}">↑</button><button data-a="idn" data-i="${it.id}">↓</button>${r.items.length>1?`<button data-a="iout" data-i="${it.id}" title="خروج از ردیف">⤴ خروج</button>`:''}<button data-a="ibk" data-i="${it.id}" title="ذخیره در بانک">📥</button><button data-a="idel" data-i="${it.id}">🗑</button></span></div>`).join('')}
  <button data-a="addin" data-r="${r.id}">＋ سؤال در همین ردیف</button></section>`).join('')}
 let SUBS=[],SC=null;try{SUBS=JSON.parse(localStorage.subs||'[]')}catch{}
@@ -109,7 +120,7 @@ const scOpts=r=>'<option value="0">بارم؟</option>'+Array.from({length:80},(
 const vBk=()=>`<div class="r" id="bc"></div><div class="r"><input id="bq" placeholder="جست‌وجو در بانک…" style="flex:1" value="${esc(BK.q)}"><select id="bt"><option value="">همه‌ی انواع</option>${Object.entries(TN).map(([k,v])=>`<option value="${k}" ${BK.ty==k?'selected':''}>${v}</option>`).join('')}</select></div><div id="bl"></div>`;
 function bkList(){const l=bank.filter(b=>(!BK.ty||b.item.type==BK.ty)&&(BK.s==''||(BK.s=='_none'?!b.subj:b.subj==BK.s))&&(!BK.q||strip(b.item.html).includes(BK.q))).sort((a,b)=>b.t-a.t);
  $('#bl').innerHTML=l.length?l.map(b=>`<div class="it"><span class="tg">${TN[b.item.type]}</span>${b.subj?`<span class="tg" style="background:var(--ac2);color:#2b1a00">${esc(b.subj)}</span>`:''}<span class="pv">${esc(strip(b.item.html).slice(0,90))}</span><span class="acts"><button class="p" data-a="bad" data-i="${b.id}">＋ به آزمون</button><button data-a="bsub" data-i="${b.id}" title="تغییر درس">🏷</button><button data-a="bed" data-i="${b.id}">✎</button><button data-a="bdel" data-i="${b.id}">🗑</button></span></div>`).join(''):`<div class="em">بانک خالی است (${fa(bank.length)} سؤال).<br>در تب آزمون روی 📥 بزن.</div>`}
-const vOut=()=>`<div class="card"><div class="r"><button class="p" data-a="pdf0">PDF بدون پاسخ</button><button class="p" data-a="pdf1">PDF با پاسخ</button></div><div class="r"><button class="p" data-a="doc0">Word بدون پاسخ</button><button class="p" data-a="doc1">Word با پاسخ</button></div><div class="r"><button data-a="json">ذخیره‌ی JSON این آزمون</button><button data-a="pv0" class="${AN?'':'p'}">پیش‌نمایش: بدون پاسخ</button><button data-a="pv1" class="${AN?'p':''}">با پاسخ</button></div><small style="color:var(--mu)">PDF: در پنجره‌ی چاپ «ذخیره به‌صورت PDF» را انتخاب کن.</small></div><div style="overflow:hidden"><div class="paper" id="pv">${paperHtml(AN)}</div></div>`;
+const vOut=()=>`<div class="card"><div class="r"><button class="p" data-a="pdf0">PDF بدون پاسخ</button><button class="p" data-a="pdf1">PDF با پاسخ</button></div><div class="r"><button class="p" data-a="doc0">Word بدون پاسخ</button><button class="p" data-a="doc1">Word با پاسخ</button></div><div class="r"><button data-a="json">ذخیره‌ی JSON این آزمون</button><button data-a="pv0" class="${AN?'':'p'}">پیش‌نمایش: بدون پاسخ</button><button data-a="pv1" class="${AN?'p':''}">با پاسخ</button></div><small style="color:var(--mu)">PDF: در پنجره‌ی چاپ «ذخیره به‌صورت PDF» را انتخاب کن.</small><div class="r" style="align-items:center"><label for="lsr">فاصله‌ی خطوط:</label><input type="range" id="lsr" min="1" max="3" step="0.1" value="${LSV()}" style="flex:1;accent-color:var(--ac)"><b id="lsv">${sf(LSV())}</b></div></div><div style="overflow:hidden"><div class="paper" id="pv" style="--ls:${LSV()};line-height:${LSV()}">${paperHtml(AN)}</div></div>`;
 function fitPv(){const p=$('#pv');if(p)p.style.zoom=Math.min(1,($('#v').clientWidth-4)/794)}
 function flash(id){const e=$('#'+id);e?.scrollIntoView({block:'center',behavior:'smooth'});e?.classList.add('fl');setTimeout(()=>e?.classList.remove('fl'),1800)}
 const mv=(a,i,d)=>{const j=i+d;if(j<0||j>=a.length)return false;[a[i],a[j]]=[a[j],a[i]];return true};
@@ -132,10 +143,10 @@ $('#v').onclick=e=>{const b=e.target.closest('button');if(!b)return;const a=b.da
  else if(a=='bed'){const x=bank.find(k=>k.id==id);openEd(x.item.type,{bank:id,item:x.item})}
  else if(a=='bdel'){if(confirm('از بانک حذف شود؟')){bank=bank.filter(k=>k.id!=id);del('bank',id);bkList()}}
  else if(a=='pv0'||a=='pv1'){AN=+a[2];render()}
- else if(a=='pdf0'||a=='pdf1'){$('#pp').innerHTML=`<div class="paper">${paperHtml(+a[3])}</div>`;const o=document.title;document.title=ex.title+(+a[3]?' - با پاسخ':'');setTimeout(()=>{print();document.title=o},200)}
+ else if(a=='pdf0'||a=='pdf1'){$('#pp').innerHTML=`<div class="paper" style="--ls:${LSV()};line-height:${LSV()}">${paperHtml(+a[3])}</div>`;const o=document.title;document.title=ex.title+(+a[3]?' - با پاسخ':'');setTimeout(()=>{print();document.title=o},200)}
  else if(a=='doc0'||a=='doc1')mkDocx(+a[3]);
  else if(a=='json')saveBlob(new Blob([JSON.stringify({app:'azmoon',v:1,exam:ex})],{type:'application/json'}),ex.title+'.json')};
-$('#v').oninput=e=>{const t=e.target;if(t.classList.contains('rtl')){ex.rows.find(r=>r.id==t.dataset.r).title=t.value;persist()}if(t.id=='bq'){BK.q=t.value;bkList()}};
+$('#v').oninput=e=>{const t=e.target;if(t.id=='lsr'){ex.ls=+t.value;persist();$('#lsv').textContent=sf(ex.ls);const p=$('#pv');if(p){p.style.lineHeight=ex.ls;p.style.setProperty('--ls',ex.ls)}return}if(t.classList.contains('rtl')){ex.rows.find(r=>r.id==t.dataset.r).title=t.value;persist()}if(t.id=='bq'){BK.q=t.value;bkList()}};
 $('#v').onchange=e=>{if(e.target.classList.contains('sc')){ex.rows.find(r=>r.id==e.target.dataset.r).score=+e.target.value;persist();const m=$('#sum');if(m)m.textContent='جمع بارم: '+sf(total())}if(e.target.id=='bt'){BK.ty=e.target.value;bkList()}};
 $('#ttl').oninput=e=>{ex.title=e.target.value;persist()};
 $$('nav button').forEach(b=>b.onclick=()=>{T=b.dataset.t;render();scrollTo(0,0)});
@@ -147,23 +158,26 @@ $('#add').onclick=()=>pick(null);addEventListener('resize',()=>T=='out'&&fitPv()
 const showM=h=>{$('#md').hidden=false;$('#md').innerHTML=`<div class="box">${h}</div>`},hideM=()=>{$('#md').hidden=true;$('#md').innerHTML='';ED=null};
 const pick=row=>{ED={row};showM(`<h3>نوع سؤال</h3><div class="r">${Object.entries(TN).map(([k,v])=>`<button class="p" data-x="ty" data-n="${k}">${v}</button>`).join('')}</div><button data-x="cl">بستن</button>`)};
 const rte=(id,h,ph)=>`<div class="ed" id="${id}" contenteditable="true" data-ph="${ph||''}">${h||''}</div>`;
-const TBAR=ty=>`<div class="tb">${[['b','<b>B</b>'],['i','<i>I</i>'],['u','<u>U</u>'],['sup','x²'],['sub','x₂'],['fr','کسر'],['tbl','جدول'],['tr','＋سطر'],['tc','＋ستون'],['dr','－سطر'],['dc','－ستون'],['dt','✕جدول'],['img','🖼 تصویر'],['rmimg','✕تصویر'],['sym','Ω علامت']].map(([c,l])=>`<button data-c="${c}">${l}</button>`).join('')}${ty=='blank'?'<button class="p" data-c="bl">نقطه‌چین</button>':''}${ty=='paren'?'<button class="p" data-c="pr">محل پرانتز</button>':''}</div><div class="sym" hidden>${SYM.map(s=>`<button data-s="${s}">${s}</button>`).join('')}</div>`;
+const TBAR=ty=>`<div class="tb">${[['b','<b>B</b>'],['i','<i>I</i>'],['u','<u>U</u>'],['sup','x²'],['sub','x₂'],['fr','کسر'],['tbl','جدول'],['tr','＋سطر'],['tc','＋ستون'],['dr','－سطر'],['dc','－ستون'],['dt','✕جدول'],['img','🖼 تصویر'],['rmimg','✕تصویر'],['sym','Ω علامت']].map(([c,l])=>`<button data-c="${c}">${l}</button>`).join('')}${ty=='blank'?'<button class="p" data-c="bl">نقطه‌چین</button>':''}${ty=='paren'?'<button class="p" data-c="pr">( ) پرانتز گزینه‌ها</button>':''}</div><div class="sym" hidden>${SYM.map(s=>`<button data-s="${s}">${s}</button>`).join('')}</div>`;
 const optRows=(d,ok)=>d.opts.map((o,i)=>`<div class="orow">${ok?`<input type="radio" name="ok" value="${i}" ${i==d.ok?'checked':''}>`:''}<span>${fa(i+1)})</span><input class="oi" value="${esc(o)}"><button data-x="ro" data-n="${i}">✕</button></div>`).join('');
-const matchRows=d=>`<b>ستون راست</b>${d.A.map((a,i)=>`<div class="orow"><span>${fa(i+1)}</span><input class="ia" value="${esc(a)}"><select class="im" title="پاسخ">${d.B.map((_,j)=>`<option value="${j}" ${d.map[i]==j?'selected':''}>${lt(j)}</option>`).join('')}</select><button data-x="rA" data-n="${i}">✕</button></div>`).join('')}<button data-x="aA">＋ آیتم راست</button><br><b>ستون چپ</b>${d.B.map((b,j)=>`<div class="orow"><span>${lt(j)}</span><input class="ib" value="${esc(b)}"><button data-x="rB" data-n="${j}">✕</button></div>`).join('')}<button data-x="aB">＋ آیتم چپ</button>`;
+const matchRows=d=>`<b>ستون راست (شماره‌دار؛ گزینه‌ی صحیح هر مورد را از لیست انتخاب کن)</b>${d.A.map((a,i)=>`<div class="orow"><span>${fa(i+1)}</span><input class="ia" value="${esc(a)}"><select class="im" title="پاسخ">${d.B.map((_,j)=>`<option value="${j}" ${d.map[i]==j?'selected':''}>${lt(j)}</option>`).join('')}</select><button data-x="rA" data-n="${i}">✕</button></div>`).join('')}<button data-x="aA">＋ آیتم راست</button><br><b>ستون چپ (جلوی هر مورد یک پرانتز می‌آید)</b>${d.B.map((b,j)=>`<div class="orow"><span>${lt(j)}</span><input class="ib" value="${esc(b)}"><button data-x="rB" data-n="${j}">✕</button></div>`).join('')}<button data-x="aB">＋ آیتم چپ</button>`;
 function edBody(d){const t=d.type;let h=`<h3>${TN[t]}</h3>${TBAR(t)}${ED.bank?'':`<label>دستور کلی سؤال (اختیاری؛ بالای سؤال می‌آید، مثلاً «گزینه‌ی مناسب را انتخاب کنید»)</label><input id="e_pre" style="width:100%" placeholder="مثلاً: در بین گزینه‌های زیر، گزینه‌ی مناسب را انتخاب کنید" value="${esc(ED.pre||'')}">`}<label>متن سؤال</label>${rte('e_html',d.html,'متن سؤال…')}`;
- if(t=='blank')h+='<small>کلمه‌ی پاسخ را انتخاب کن و «نقطه‌چین» را بزن؛ در برگه نقطه‌چین و در پاسخ‌نامه خود کلمه می‌آید.</small>';
+ if(t=='blank')h+='<small>فقط نقطه‌چین بگذار (با دکمه‌ی «نقطه‌چین» یا خودت با ... تایپ کن). کلمه‌ی صحیح هر نقطه‌چین را پایین بنویس؛ در پاسخ‌نامه جای نقطه‌چین می‌نشیند.</small><label>پاسخ هر نقطه‌چین (به ترتیب)</label><div id="e_bl"></div>';
  if(t=='tf')h+=`<label>پاسخ</label><select id="e_ok"><option value="1" ${d.ok?'selected':''}>صحیح</option><option value="0" ${d.ok?'':'selected'}>غلط</option></select>`;
- if(t=='paren')h+=`<small>جای پرانتز را با «محل پرانتز» مشخص کن (وگرنه آخر جمله می‌آید). گزینه‌ی درست را با دایره انتخاب کن.</small><div id="e_o">${optRows(d,1)}</div><button data-x="ao">＋ گزینه</button>`;
+ if(t=='paren')h+=`<small>گزینه‌ها را داخل پرانتز بنویس و با خط تیره جدا کن؛ مثلاً: زمین به دور ( ماه - خورشید ) می‌چرخد. بعد گزینه‌ی صحیح را پایین بنویس؛ در پاسخ‌نامه همان گزینه پررنگ می‌شود.</small><label>گزینه‌ی صحیح (پاسخ)</label><input id="e_pa" style="width:100%" value="${esc(d.ans||'')}">`;
  if(t=='mc')h+=`<label>گزینه‌ها (دایره = گزینه‌ی درست)</label><div id="e_o">${optRows(d,1)}</div><button data-x="ao">＋ گزینه</button><label>چیدمان گزینه‌ها</label><select id="e_lay">${[[4,'۴ ستونی (در یک خط)'],[2,'۲ ستونی'],[1,'۱ ستونی']].map(([v,l])=>`<option value="${v}" ${d.lay==v?'selected':''}>${l}</option>`).join('')}</select><label>توضیح پاسخ (اختیاری، با تصویر)</label>${rte('e_ans',d.ans,'')}`;
  if(t=='match')h+=`<div id="e_m">${matchRows(d)}</div>`;
  if(t=='desc')h+=`<label>تعداد خط پاسخ در برگه</label><input type="number" id="e_ln" min="0" max="30" value="${d.lines||0}"><label>پاسخ (با تصویر)</label>${rte('e_ans',d.ans,'پاسخ تشریحی…')}`;
  return h+`<div class="ft"><button class="p" data-x="sv">ثبت</button>${ED.edit||ED.bank?'':'<button class="p" data-x="sn">ثبت و سؤال بعدی در همین ردیف</button>'}<button data-x="cl">انصراف</button></div>`}
-function openEd(type,c){ED={...c,type,d:c.item?clone(c.item):{...NEW[type](),id:uid()},edit:c.bank?null:c.item};if(c.bank)ED.d.id=ED.d.id||uid();{const ro=c.bank?null:(c.item?find(c.item.id)?.r:(c.row?ex.rows.find(x=>x.id==c.row):null));ED.pre=ro?.title||''}showM(edBody(ED.d));lastE=$('#e_html')}
+function openEd(type,c){ED={...c,type,d:legacy(c.item?clone(c.item):{...NEW[type](),id:uid()}),edit:c.bank?null:c.item};if(c.bank)ED.d.id=ED.d.id||uid();{const ro=c.bank?null:(c.item?find(c.item.id)?.r:(c.row?ex.rows.find(x=>x.id==c.row):null));ED.pre=ro?.title||''}showM(edBody(ED.d));lastE=$('#e_html');if(ED.d.type=='blank')syncBl(ED.d.blanks)}
 const clean=h=>{const d=document.createElement('div');d.innerHTML=h;d.querySelectorAll('.sel').forEach(x=>x.classList.remove('sel'));return d.innerHTML.replace(/<br>$/,'')};
 function sync(){const d=ED.d;if($('#e_o')){d.opts=$$('.oi').map(i=>i.value);d.ok=+($('input[name=ok]:checked')?.value||0)}
  if($('#e_m')){d.A=$$('.ia').map(i=>i.value);d.B=$$('.ib').map(i=>i.value);d.map=$$('.im').map(s=>+s.value)}}
-function collect(){sync();const d=ED.d;d.html=clean($('#e_html').innerHTML);if($('#e_ok'))d.ok=$('#e_ok').value=='1';if($('#e_lay'))d.lay=+$('#e_lay').value;if($('#e_ans'))d.ans=clean($('#e_ans').innerHTML);if($('#e_ln'))d.lines=+$('#e_ln').value||0}
-function sv(next){collect();const d=ED.d;if(d.type=='match'?!d.A.some(x=>x.trim()):!strip(d.html).trim()&&!/<img|<table/.test(d.html))return toast('متن سؤال خالی است');
+function collect(){sync();const d=ED.d;d.html=clean($('#e_html').innerHTML);if($('#e_ok'))d.ok=$('#e_ok').value=='1';if($('#e_lay'))d.lay=+$('#e_lay').value;if($('#e_ans'))d.ans=clean($('#e_ans').innerHTML);if($('#e_ln'))d.lines=+$('#e_ln').value||0;if(d.type=='blank')d.blanks=$$('.bli').map(i=>i.value.trim());if($('#e_pa'))d.ans=$('#e_pa').value.trim()}
+function syncBl(vals){const box=$('#e_bl'),ed=$('#e_html');if(!box||!ed)return;const n=(ed.textContent.match(R_DOTS())||[]).length,old=vals||$$('.bli').map(i=>i.value);if(!vals&&box.dataset.n==n)return;box.dataset.n=n;
+ box.innerHTML=n?Array.from({length:n},(_,i)=>`<div class="orow"><span>${fa(i+1)})</span><input class="bli" value="${esc(old[i]||'')}"></div>`).join(''):'<small>هنوز نقطه‌چینی در متن نیست.</small>'}
+$('#md').addEventListener('input',e=>{if(e.target.id=='e_html')syncBl()});
+function sv(next){collect();const d=ED.d;if(d.type=='blank'&&(d.blanks||[]).some(x=>!x))toast('پاسخ برخی نقطه‌چین‌ها را ننوشته‌ای');if(d.type=='paren'&&!d.ans)toast('گزینه‌ی صحیح را ننوشته‌ای');if(d.type=='match'?!d.A.some(x=>x.trim()):!strip(d.html).trim()&&!/<img|<table/.test(d.html))return toast('متن سؤال خالی است');
  if(ED.bank){const b=bank.find(x=>x.id==ED.bank);b.item=d;put('bank',b);hideM();T='bk';render();return}
  const pre=$('#e_pre')?$('#e_pre').value.trim():null;if(ED.edit){Object.assign(ED.edit,d);const f=find(d.id);if(f&&pre!==null)f.r.title=pre}else{let r=ED.row&&ex.rows.find(x=>x.id==ED.row);if(!r){r={id:uid(),title:'',items:[]};ex.rows.push(r);ED.row=r.id}if(pre!==null)r.title=pre;r.items.push(d)}
  persist();if(next&&!ED.edit){const ro=ED.row;render();openEd(d.type,{row:ro});toast('ثبت شد؛ سؤال بعدی');return}hideM();T='ex';render();flash('i_'+d.id)}
@@ -178,8 +192,8 @@ function cmd(c){const m={b:'bold',i:'italic',u:'underline',sup:'superscript',sub
  if(!lastE)return toast('اول داخل کادر متن کلیک کن');
  if(m[c])document.execCommand(m[c]);else if(c=='fr'){const a=prompt('صورت کسر (عدد بالا)','۱');if(a===null)return;const b=prompt('مخرج کسر (عدد پایین)','۲');if(b===null)return;insNode(mkFr(fa(a.trim()),fa(b.trim())))}
  else if(c=='tbl'){const r=+prompt('تعداد سطر',3),k=+prompt('تعداد ستون',3);if(r>0&&k>0){const t=document.createElement('table');t.className='qt';for(let i=0;i<r;i++){const tr=t.insertRow();for(let j=0;j<k;j++)tr.insertCell().innerHTML='&nbsp;'}insNode(t)}}
- else if(c=='bl'){const t=getSelection().toString().trim();document.execCommand('insertText',false,`[[${t||'پاسخ'}]]`)}
- else if(c=='pr')document.execCommand('insertText',false,'{{}}');
+ else if(c=='bl'){document.execCommand('insertText',false,'……………');setTimeout(syncBl,0)}
+ else if(c=='pr')document.execCommand('insertText',false,'( گزینه‌ی اول - گزینه‌ی دوم )');
  else if(c=='rmimg')lastE.querySelectorAll('img.sel').forEach(x=>x.remove());
  else{const td=selTd();if(!td)return;const tr=td.parentElement,tb=td.closest('table'),ci=[...tr.children].indexOf(td),cell=()=>{const x=document.createElement('td');x.innerHTML='&nbsp;';return x};
   if(c=='tr'){const t=tr.cloneNode(true);t.querySelectorAll('td').forEach(x=>x.innerHTML='&nbsp;');tr.after(t)}
@@ -207,7 +221,7 @@ $('#md').addEventListener('click',e=>{const t=e.target;if(t.tagName=='IMG'&&t.cl
  else if(x=='xj')saveBlob(new Blob([JSON.stringify({app:'azmoon',v:1,exam:ex})]),ex.title+'.json');
  else if(x=='xb')saveBlob(new Blob([JSON.stringify({app:'azmoon',v:1,exams,bank,subs:SUBS})]),'azmoon-backup.json')});
 $('#md').addEventListener('change',async e=>{if(e.target.id!='fj')return;try{const o=JSON.parse(await e.target.files[0].text()),ad=o.exams||(o.exam?[o.exam]:[]);
- for(const x of ad){x.id=uid();exams.push(x);await put('exams',x)}for(const b of o.bank||[]){b.id=uid();bank.push(b);await put('bank',b)}for(const x of o.subs||[])addSub(x);if(ad.length){ex=ad.at(-1);localStorage.cur=ex.id}hideM();render();toast('بازیابی شد')}catch{toast('فایل معتبر نیست')}});
+ for(const x of ad){x.id=uid();migr(x);exams.push(x);await put('exams',x)}for(const b of o.bank||[]){b.id=uid();legacy(b.item);bank.push(b);await put('bank',b)}for(const x of o.subs||[])addSub(x);if(ad.length){ex=ad.at(-1);localStorage.cur=ex.id}hideM();render();toast('بازیابی شد')}catch{toast('فایل معتبر نیست')}});
 $('#fim').onchange=e=>{addImgs([...e.target.files]);e.target.value=''};
 function mExams(){showM(`<h3>آزمون‌ها</h3>${[...exams].sort((a,b)=>b.t-a.t).map(k=>`<div class="it"><span class="pv"><b>${esc(k.title)}</b> · ${fa(k.rows.length)} سؤال</span><button data-x="xo" data-n="${k.id}">باز کردن</button><button data-x="xd" data-n="${k.id}">کپی</button><button data-x="xx" data-n="${k.id}">🗑</button></div>`).join('')}
  <div class="r"><button class="p" data-x="xn">＋ آزمون جدید</button><button data-x="xj">ذخیره JSON این آزمون</button><button data-x="xb">پشتیبان کامل (همه + بانک)</button><label class="b">بازیابی از JSON<input type="file" accept=".json,application/json" hidden id="fj"></label></div><small id="us"></small><button data-x="cl">بستن</button>`);
@@ -218,7 +232,7 @@ const loadDocx=async()=>{if(window.docx)return window.docx;for(const u of['https
 async function mkDocx(a){toast('در حال ساخت Word…');const d=await loadDocx();if(!d)return toast('کتابخانه‌ی Word لود نشد؛ اینترنت را بررسی کن و دوباره بزن');
  try{const FN={ascii:'B Nazanin',cs:'B Nazanin',hAnsi:'B Nazanin',eastAsia:'B Nazanin'},W=10206,GW=7500;
  const R=(t,o={})=>new d.TextRun({text:t,font:FN,size:28,sizeComplexScript:28,rightToLeft:true,bold:!!o.b,boldComplexScript:!!o.b,italics:!!o.i,italicsComplexScript:!!o.i,underline:o.u?{}:undefined,superScript:!!o.sup,subScript:!!o.sub});
- const Pg=(r,ind)=>new d.Paragraph({children:r,bidirectional:true,indent:ind?{start:ind}:undefined,spacing:{after:80,line:408}});
+ const Pg=(r,ind)=>new d.Paragraph({children:r,bidirectional:true,indent:ind?{start:ind}:undefined,spacing:{after:80,line:Math.round(240*LSV())}});
  const img=c=>{const w0=+c.dataset.w||200,h0=+c.dataset.h||150,s=Math.min(1,340/w0),b=atob(c.getAttribute('src').split(',')[1]),u=new Uint8Array(b.length);for(let i=0;i<b.length;i++)u[i]=b.charCodeAt(i);return new d.ImageRun({data:u,type:'jpg',transformation:{width:Math.round(w0*s),height:Math.round(h0*s)}})};
  const frac=(x,y)=>{try{return new d.Math({children:[new d.MathFraction({numerator:[new d.MathRun(x)],denominator:[new d.MathRun(y)]})]})}catch{return R(x+'/'+y)}};
  const inl=(n,st,out)=>{n.childNodes.forEach(c=>{if(c.nodeType==3){if(c.textContent)out.push(R(c.textContent,st))}else if(c.nodeType==1){const g=c.tagName,s={...st};
@@ -236,20 +250,20 @@ async function mkDocx(a){toast('در حال ساخت Word…');const d=await loa
  const itemK=(it,pre,ind)=>{const o=P(pre,lead(it,a),ind);
   if(it.type=='mc'){const c=it.lay||4,rows=[];for(let i=0;i<it.opts.length;i+=c)rows.push(Array.from({length:c},(_,j)=>optRun(it,i+j)));o.push(grid(rows,Array(c).fill(1/c)));
    if(a)o.push(...P([R('پاسخ: ',{b:1}),R('گزینه‌ی '+fa(it.ok+1)+(it.ans?' — ':''))],it.ans||'',ind))}
-  if(it.type=='match'){const rows=[],n=Math.max(it.A.length,it.B.length);for(let i=0;i<n;i++){const x=i<it.A.length;rows.push([x?[R(fa(i+1)+'. '+it.A[i])]:[],x?[R('( '+(a?lt(it.map[i]):'      ')+' )')]:[],i<it.B.length?[R(lt(i)+'. '+it.B[i])]:[]])}o.push(grid(rows,[.42,.14,.44]))}
-  if(it.type=='desc'){for(let i=0;i<(it.lines||0);i++)o.push(new d.Paragraph({border:{bottom:{style:d.BorderStyle.DOTTED,size:4,color:'888888',space:1}},spacing:{after:120,line:408},children:[]}));if(a)o.push(...P([R('پاسخ: ',{b:1})],it.ans||'',ind))}
+  if(it.type=='match'){const rows=[],n=Math.max(it.A.length,it.B.length),inv=j=>{const i=it.map.indexOf(j);return i>=0?fa(i+1):'—'};for(let i=0;i<n;i++){const x=i<it.B.length;rows.push([i<it.A.length?[R(fa(i+1)+'. '+it.A[i])]:[],x?[R('( '+(a?inv(i):'      ')+' )')]:[],x?[R(it.B[i])]:[]])}o.push(grid(rows,[.42,.14,.44]))}
+  if(it.type=='desc'){for(let i=0;i<(it.lines||0);i++)o.push(new d.Paragraph({border:{bottom:{style:d.BorderStyle.DOTTED,size:4,color:'888888',space:1}},spacing:{after:120,line:Math.round(240*LSV())},children:[]}));if(a)o.push(...P([R('پاسخ: ',{b:1})],it.ans||'',ind))}
   return o};
  const endP=l=>l.at(-1)instanceof d.Paragraph?l:[...l,new d.Paragraph({spacing:{before:0,after:0,line:20,lineRule:d.LineRuleType.EXACTLY},children:[]})];
  const cp=(t,b)=>new d.Paragraph({alignment:d.AlignmentType.CENTER,bidirectional:true,children:t?[R(t,{b})]:[]});
  const cw=[.09,.79,.12],C=(ch,i,fill)=>new d.TableCell({width:{size:Math.round(W*cw[i]),type:d.WidthType.DXA},shading:fill?{fill,type:d.ShadingType.CLEAR,color:'auto'}:undefined,children:ch});
  const trs=[new d.TableRow({tableHeader:true,children:['ردیف','سوالات','بارم'].map((t,i)=>C([cp(t,1)],i,'E8E8E8'))})];
  ex.rows.forEach((r,ri)=>{const s=r.items;let k=[];
-  if(r.title)k.push(...P([],esc(r.title),0));if(s.length==1)k.push(...itemK(s[0],[],0));else{s.forEach((it,i)=>k.push(...itemK(it,[R(fa(i+1)+') ',{b:1})],0)))}
+  if(r.title)k.push(...P([],esc(r.title),0));if(s.length==1)k.push(...itemK(s[0],[],0));else{s.forEach((it,i)=>k.push(...itemK(it,[R(lt(i)+') ',{b:1})],0)))}
   trs.push(new d.TableRow({cantSplit:true,children:[C([cp(fa(ri+1),1)],0),C(endP(k),1),C([cp(r.score?sf(r.score):'')],2)]}))});
  if(total()>0)trs.push(new d.TableRow({cantSplit:true,children:[new d.TableCell({columnSpan:2,width:{size:Math.round(W*.88),type:d.WidthType.DXA},children:[cp('جمع بارم',1)]}),C([cp(sf(total()),1)],2)]}));
  const out=[new d.Table({rows:trs,visuallyRightToLeft:true,width:{size:W,type:d.WidthType.DXA},columnWidths:cw.map(x=>Math.round(W*x))})];
  const doc=new d.Document({sections:[{properties:{page:{size:{width:11906,height:16838},margin:{top:850,right:850,bottom:850,left:850}}},children:out}]});
  saveBlob(await d.Packer.toBlob(doc),ex.title+(a?' - با پاسخ':' - بدون پاسخ')+'.docx');toast('فایل Word ساخته شد')}catch(e){console.error(e);toast('خطا در ساخت Word')}}
 // ---------- start
-(async()=>{db=await idb();exams=await all('exams');bank=await all('bank');ex=exams.find(e=>e.id==localStorage.cur)||exams[0];if(!ex)newExam();else render();navigator.storage?.persist?.();setTimeout(loadDocx,3000);if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js')})();
+(async()=>{db=await idb();exams=await all('exams');bank=await all('bank');exams.forEach(migr);bank.forEach(b=>legacy(b.item));ex=exams.find(e=>e.id==localStorage.cur)||exams[0];if(!ex)newExam();else render();navigator.storage?.persist?.();setTimeout(loadDocx,3000);if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js')})();
 </script></body></html>
