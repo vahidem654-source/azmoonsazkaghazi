@@ -47,7 +47,9 @@ nav button{flex:1;border:0;border-radius:0;justify-content:center;min-height:50p
 .sum{background:var(--cd);border:1px solid var(--ln);border-radius:12px;padding:6px 12px;margin-bottom:10px;color:var(--ac);font-weight:700}
 #pp{display:none}#pp .paper{width:auto;padding:0}
 @media print{.ui{display:none!important}#pp{display:block}@page{size:A4;margin:15mm}body{background:#fff}}
+#cr{position:fixed;right:1px;top:50%;transform:translateY(-50%);writing-mode:vertical-rl;font-size:11px;color:var(--tx);opacity:.45;pointer-events:none;user-select:none;-webkit-user-select:none;z-index:1;white-space:nowrap;font-family:Vazirmatn,Tahoma,sans-serif}
 </style></head><body>
+<div id="cr" class="ui">تهیه‌کننده: وحیده محجوب</div>
 <div class="ui" id="app">
 <header><button id="mnu">☰</button><input id="ttl" placeholder="عنوان آزمون"><button id="th">◐</button></header>
 <main id="v"></main>
@@ -115,7 +117,7 @@ let SUBS=[],SC=null;try{SUBS=JSON.parse(localStorage.subs||'[]')}catch{}
 const saveSubs=()=>localStorage.subs=JSON.stringify(SUBS),addSub=n=>{if(!SUBS.includes(n)){SUBS.push(n);saveSubs()}},subjects=()=>[...new Set([...SUBS,...bank.map(b=>b.subj).filter(Boolean)])];
 function chooseSubj(cb){SC=cb;showM(`<h3>درس را انتخاب کن</h3><div class="r">${subjects().map((x,i)=>`<button class="p" data-x="bs" data-n="${i}">${esc(x)}</button>`).join('')}<button data-x="bs" data-n="-1">بدون درس</button></div><div class="orow"><input id="ns" placeholder="درس جدید (مثلاً ریاضی)"><button class="p" data-x="bsn">＋ ایجاد و انتخاب</button></div><button data-x="cl">انصراف</button>`)}
 function bkChips(){const n=v=>bank.filter(b=>v==''?1:v=='_none'?!b.subj:b.subj==v).length,c=(v,t)=>`<button data-a="bsel" data-i="${esc(v)}" class="${BK.s==v?'p':''}">${esc(t)} (${fa(n(v))})</button>`;
- $('#bc').innerHTML=c('','همه')+subjects().map(x=>c(x,x)).join('')+c('_none','بدون درس')+'<button data-a="bnew">＋ درس جدید</button>'+(BK.s&&BK.s!='_none'?'<button data-a="bren">✎ نام درس</button><button data-a="bdsub">🗑 حذف درس</button>':'')}
+ $('#bc').innerHTML=c('','همه')+subjects().map(x=>c(x,x)).join('')+c('_none','بدون درس')+'<button data-a="bnew">＋ درس جدید</button><button data-a="bpaste">📋 چسباندن گروهی</button>'+(BK.s&&BK.s!='_none'?'<button data-a="bren">✎ نام درس</button><button data-a="bdsub">🗑 حذف درس</button>':'')}
 const scOpts=r=>'<option value="0">بارم؟</option>'+Array.from({length:80},(_,i)=>{const v=(i+1)*.25;return`<option value="${v}" ${r.score==v?'selected':''}>${sf(v)}</option>`}).join('');
 const vBk=()=>`<div class="r" id="bc"></div><div class="r"><input id="bq" placeholder="جست‌وجو در بانک…" style="flex:1" value="${esc(BK.q)}"><select id="bt"><option value="">همه‌ی انواع</option>${Object.entries(TN).map(([k,v])=>`<option value="${k}" ${BK.ty==k?'selected':''}>${v}</option>`).join('')}</select></div><div id="bl"></div>`;
 function bkList(){const l=bank.filter(b=>(!BK.ty||b.item.type==BK.ty)&&(BK.s==''||(BK.s=='_none'?!b.subj:b.subj==BK.s))&&(!BK.q||strip(b.item.html).includes(BK.q))).sort((a,b)=>b.t-a.t);
@@ -156,7 +158,7 @@ if(localStorage.n!=null?localStorage.n:matchMedia('(prefers-color-scheme:dark)')
 $('#add').onclick=()=>pick(null);addEventListener('resize',()=>T=='out'&&fitPv());
 // ---------- modal + editor
 const showM=h=>{$('#md').hidden=false;$('#md').innerHTML=`<div class="box">${h}</div>`},hideM=()=>{$('#md').hidden=true;$('#md').innerHTML='';ED=null};
-const pick=row=>{ED={row};showM(`<h3>نوع سؤال</h3><div class="r">${Object.entries(TN).map(([k,v])=>`<button class="p" data-x="ty" data-n="${k}">${v}</button>`).join('')}</div><button data-x="cl">بستن</button>`)};
+const pick=row=>{ED={row};showM(`<h3>نوع سؤال</h3><div class="r">${Object.entries(TN).map(([k,v])=>`<button class="p" data-x="ty" data-n="${k}">${v}</button>`).join('')}</div><div class="r"><button data-x="ppst" style="border-color:var(--ac)">📋 چسباندن چند سؤال با تشخیص خودکار</button></div><button data-x="cl">بستن</button>`)};
 const rte=(id,h,ph)=>`<div class="ed" id="${id}" contenteditable="true" data-ph="${ph||''}">${h||''}</div>`;
 const TBAR=ty=>`<div class="tb">${[['b','<b>B</b>'],['i','<i>I</i>'],['u','<u>U</u>'],['sup','x²'],['sub','x₂'],['fr','کسر'],['tbl','جدول'],['tr','＋سطر'],['tc','＋ستون'],['dr','－سطر'],['dc','－ستون'],['dt','✕جدول'],['img','🖼 تصویر'],['rmimg','✕تصویر'],['sym','Ω علامت']].map(([c,l])=>`<button data-c="${c}">${l}</button>`).join('')}${ty=='blank'?'<button class="p" data-c="bl">نقطه‌چین</button>':''}${ty=='paren'?'<button class="p" data-c="pr">( ) پرانتز گزینه‌ها</button>':''}</div><div class="sym" hidden>${SYM.map(s=>`<button data-s="${s}">${s}</button>`).join('')}</div>`;
 const optRows=(d,ok)=>d.opts.map((o,i)=>`<div class="orow">${ok?`<input type="radio" name="ok" value="${i}" ${i==d.ok?'checked':''}>`:''}<span>${fa(i+1)})</span><input class="oi" value="${esc(o)}"><button data-x="ro" data-n="${i}">✕</button></div>`).join('');
@@ -264,6 +266,64 @@ async function mkDocx(a){toast('در حال ساخت Word…');const d=await loa
  const out=[new d.Table({rows:trs,visuallyRightToLeft:true,width:{size:W,type:d.WidthType.DXA},columnWidths:cw.map(x=>Math.round(W*x))})];
  const doc=new d.Document({sections:[{properties:{page:{size:{width:11906,height:16838},margin:{top:850,right:850,bottom:850,left:850}}},children:out}]});
  saveBlob(await d.Packer.toBlob(doc),ex.title+(a?' - با پاسخ':' - بدون پاسخ')+'.docx');toast('فایل Word ساخته شد')}catch(e){console.error(e);toast('خطا در ساخت Word')}}
+// ================= PASTE MANY QUESTIONS & AUTO-DETECT TYPE =================
+const DGT='[0-9۰-۹٠-٩]+',LAB='('+DGT+'|الف|ب|ج|پ|ت|ث|د|هـ|ه|و|[a-fA-F])';
+const dg=s=>String(s).replace(/[۰-۹]/g,c=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(c)).replace(/[٠-٩]/g,c=>'٠١٢٣٤٥٦٧٨٩'.indexOf(c));
+const labOk=(tok,k)=>{tok=dg(tok).trim().toLowerCase();return tok==String(k+1)||tok==['الف','ب','ج','د','ه','و'][k]||tok==['الف','ب','پ','ت','ث','ج'][k]||tok=='abcdef'[k]};
+const isLet=t=>!/^[0-9۰-۹٠-٩]+$/.test(t);
+const OPTRE=new RegExp('^\\s*\\(?\\s*'+LAB+'\\s*[\\)\\.\\-–:]\\s*(.*)$'),QRE=new RegExp('^\\s*('+DGT+')\\s*[\\.\\-–\\)ـ:]\\s*(?=\\S)(.*)$'),MARK=new RegExp('(?:^|\\s)\\(?\\s*'+LAB+'\\s*[\\)\\.]\\s*','g'),
+ ANSRE=/^\s*(?:پاسخ|جواب|کلید|گزینه‌?\s*ی?\s*(?:صحیح|درست))\s*[:：\-]\s*(.*)$/,TFRE=/(?:صحیح|درست|ص)\s*(?:[-–—\/،]|یا)\s*(?:غلط|نادرست|غ)/,
+ TFCUT=/\(?\s*(?:صحیح|درست|ص)\s*(?:[-–—\/،]|یا)\s*(?:غلط|نادرست|غ)\s*\)?/;
+function inlineOpts(L,k){const ms=[...L.matchAll(MARK)];for(let s=0;s<ms.length;s++){if(!labOk(ms[s][1],k))continue;const run=[ms[s]];for(let j=s+1;j<ms.length&&labOk(ms[j][1],k+run.length);j++)run.push(ms[j]);
+ if(run.length>=2)return{pre:L.slice(0,run[0].index).trim(),opts:run.map((r,i)=>L.slice(r.index+r[0].length,i+1<run.length?run[i+1].index:undefined).trim()),count:run.length}}return null}
+function parseBlocks(txt){
+ const lines=txt.replace(/\r/g,'').replace(/\u00a0/g,' ').split('\n').map(l=>l.replace(/\s+$/,'')),numbered=lines.filter(l=>QRE.test(l)&&!l.includes('\t')).length>=2,blocks=[],pre=[];let cur=null,qn=0;
+ const start=s=>{cur={stem:[s],opts:[],ans:'',tab:[]};blocks.push(cur);const io=inlineOpts(s,0);if(io){cur.stem=[io.pre];cur.opts=io.opts}};
+ const peekOpt=i=>{const n=lines.slice(i+1).find(x=>x.trim()),m=n&&n.match(OPTRE);return!!(m&&labOk(m[1],cur.opts.length+1))};
+ lines.forEach((L,li)=>{
+  if(!L.trim()){if(!numbered)cur=null;return}
+  let m;
+  if(cur&&(m=L.match(ANSRE))){cur.ans=m[1].trim();return}
+  if(cur&&L.includes('\t')){const c=L.split('\t').map(x=>x.trim()).filter(Boolean);if(c.length>=2){cur.tab.push(c);return}}
+  if(cur){const io=inlineOpts(L,cur.opts.length);if(io&&(cur.opts.length==0||!io.pre)){if(io.pre)cur.stem.push(io.pre);cur.opts.push(...io.opts);return}
+   m=L.match(OPTRE);if(m&&labOk(m[1],cur.opts.length)){const lt_=isLet(m[1]),qm=numbered&&L.match(QRE),coll=!lt_&&qm&&+dg(qm[1])==qn+1&&cur.opts.length>=2&&!peekOpt(li);
+    if((lt_?cur.opts.length<6:cur.opts.length<4)&&!coll){cur.opts.push(m[2].trim());return}}}
+  if(numbered&&(m=L.match(QRE))){qn=+dg(m[1]);start(m[2].trim());return}
+  if(!cur){if(numbered)pre.push(L.trim());else{const q=L.match(QRE);start(q?q[2].trim():L.trim())}return}
+  if(cur.opts.length)cur.opts[cur.opts.length-1]+=' '+L.trim();else cur.stem.push(L.trim())});
+ return{blocks:blocks.filter(b=>b.stem.join('').trim()||b.opts.length),pre:pre.join(' ')}}
+const hasParen=t=>[...t.matchAll(/\(([^()]{1,80})\)/g)].some(m=>{const p=m[1].split(/\s*[-–—،\/|]\s*|\s+یا\s+/).map(x=>x.trim());return p.length>=2&&p.every(x=>x&&x.length<=30)});
+function ident(b){const t=b.stem.join(' ');if(b.opts.length>=2)return'mc';if(b.tab.length>=2)return'match';if(TFRE.test(t)||/^(?:صحیح|درست|غلط|نادرست)\s*$/.test(b.ans))return'tf';if(R_DOTS().test(t))return'blank';if(hasParen(t))return'paren';return'desc'}
+const MK=/^\s*[*✓✔√]\s*|\s*[*✓✔√]\s*$/g;
+function mcOk(b){let ok=b.opts.findIndex(o=>MK.test(o));MK.lastIndex=0;if(ok<0&&b.ans){const a=b.ans.trim(),m=a.match(new RegExp('^(?:گزینه\\s*)?\\(?\\s*'+LAB+'\\s*\\)?\\s*$'));if(m){for(let k=0;k<b.opts.length;k++)if(labOk(m[1],k)){ok=k;break}}if(ok<0)ok=b.opts.findIndex(o=>nzb(o.replace(MK,''))==nzb(a))}return ok}
+function matchItem(b,t){const A=[],B=[];b.tab.forEach(c=>{A.push(c[0].replace(/^[0-9۰-۹٠-٩]+\s*[\.\)\-]\s*/,''));if(c.length>1)B.push(c[c.length-1].replace(/^\(\s*\)\s*|^(?:الف|ب|ج|د|ه)\s*[\.\)\-]\s*/,''))});
+ const map=A.map((_,i)=>i);[...(b.ans||'').matchAll(/([0-9۰-۹٠-٩]+)\s*[-–→:]\s*(الف|ب|ج|پ|ت|ث|د|ه|[0-9۰-۹٠-٩]+|[a-fA-F])/g)].forEach(p=>{const i=+dg(p[1])-1;for(let k=0;k<B.length;k++)if(labOk(p[2],k)){map[i]=k;break}});
+ return{id:uid(),type:'match',html:esc(t)||'شماره‌ی مورد مرتبط از ستون راست را در پرانتز جلوی هر مورد ستون چپ بنویسید.',A:A.length?A:['',''],B:B.length?B:['',''],map:A.length?map:[0,1]}}
+function mkItem(b){const t=b.stem.join(' ').trim(),id=uid(),ty=b.type;
+ if(ty=='mc'){const o=b.opts.map(x=>x.replace(MK,'').trim());while(o.length<2)o.push('');const ml=Math.max(...o.map(x=>x.length));return{id,type:'mc',html:esc(t),opts:o,ok:Math.max(0,mcOk(b)),lay:ml<=14?4:ml<=34?2:1,ans:''}}
+ if(ty=='tf')return{id,type:'tf',html:esc(t.replace(TFCUT,'').trim()),ok:!/^(?:غلط|نادرست|غ|✗|×|F|false)/i.test(b.ans.trim())};
+ if(ty=='blank'){const n=(t.match(R_DOTS())||[]).length,an=b.ans?b.ans.split(/[،;؛]|\s+-\s+/).map(x=>x.trim()):[];return{id,type:'blank',html:esc(t),blanks:Array.from({length:n},(_,i)=>an[i]||'')}}
+ if(ty=='paren')return{id,type:'paren',html:esc(t),ans:b.ans.trim()};
+ if(ty=='match')return matchItem(b,t);
+ return{id,type:'desc',html:esc(t)+(b.opts.length?'<br>'+b.opts.map(esc).join('<br>'):''),ans:'',lines:0}}
+let PB=[],PRE='';
+const pinfo=b=>{const t=b.type;if(t=='mc'){const k=mcOk(b);return fa(b.opts.length)+' گزینه'+(k>=0?' · پاسخ: '+fa(k+1):' · پاسخ مشخص نشد')}if(t=='tf')return b.ans?'پاسخ: '+b.ans:'پاسخ مشخص نشد (پیش‌فرض: صحیح)';
+ if(t=='blank'){const n=(b.stem.join(' ').match(R_DOTS())||[]).length;return fa(n)+' نقطه‌چین'+(b.ans?'':' · پاسخ مشخص نشد')}if(t=='paren')return b.ans?'پاسخ: '+b.ans:'پاسخ مشخص نشد';
+ if(t=='match')return b.tab.length>=2?fa(b.tab.length)+' ردیف · پاسخ‌ها را بررسی کن':'ساختار وصل‌کردنی پیدا نشد';return''};
+function drawPB(){const el=$('#pv2');if(!el)return;el.innerHTML=PB.length?`<h3 style="margin-top:12px">${fa(PB.length)} سؤال تشخیص داده شد</h3><small>نوع هر سؤال را اگر لازم بود عوض کن و تیک سؤال‌های نخواسته را بردار.</small>`+
+ PB.map((b,i)=>`<div class="it" style="display:block"><div class="r" style="margin:0;align-items:center"><label><input type="checkbox" data-pi="${i}" ${b.on?'checked':''}> <b>${fa(i+1)}</b></label><select data-pt="${i}">${Object.entries(TN).map(([k,v])=>`<option value="${k}" ${b.type==k?'selected':''}>${v}</option>`).join('')}</select><small>${pinfo(b)}</small></div><div style="color:var(--mu);margin-top:4px">${esc(b.stem.join(' ').slice(0,140))}</div></div>`).join('')+
+ '<div class="ft"><button class="p" data-x="padd">＋ افزودن به آزمون</button><button data-x="pbk">📥 ذخیره در بانک</button></div>':'<div class="em">سؤالی پیدا نشد.</div>'}
+function openPaste(){PB=[];showM(`<h3>چسباندن چند سؤال</h3><small>سؤال‌ها را از Word یا هر جای دیگر کپی و اینجا بچسبان؛ شماره‌دار یا جدا شده با خط خالی. گزینه‌ها را با ۱) ۲) ۳) ۴) یا الف) ب) ج) د) بنویس. پاسخ را (اختیاری) در خطی مثل «پاسخ: ب» زیر سؤال بگذار. نوع هر سؤال خودکار تشخیص داده می‌شود.</small>
+ <textarea id="pt" rows="8" style="width:100%;background:var(--bg);color:inherit;border:1px solid var(--ln);border-radius:10px;padding:8px;font:inherit" placeholder="۱. کدام یک میوه است؟&#10;۱) سیب ۲) کاهو ۳) هویج ۴) گوجه&#10;پاسخ: ۱&#10;۲. زمین به دور ....... می‌چرخد.&#10;پاسخ: خورشید"></textarea><div class="r"><button class="p" data-x="pdet">🔍 تشخیص سؤال‌ها</button><button data-x="cl">بستن</button></div><div id="pv2"></div>`)}
+$('#md').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;const x=b.dataset.x;
+ if(x=='ppst')openPaste();
+ else if(x=='pdet'){const r=parseBlocks($('#pt').value);PRE=r.pre;PB=r.blocks.map(q=>({...q,type:ident(q),on:true}));drawPB()}
+ else if(x=='padd'){const sel=PB.filter(q=>q.on);if(!sel.length)return toast('سؤالی انتخاب نشده');const first=ex.rows.length;
+  sel.forEach((q,i)=>ex.rows.push({id:uid(),title:i==0?PRE:'',score:0,items:[mkItem(q)]}));persist();hideM();T='ex';render();flash('r_'+ex.rows[first].id);toast(fa(sel.length)+' سؤال به آزمون اضافه شد')}
+ else if(x=='pbk'){const sel=PB.filter(q=>q.on);if(!sel.length)return toast('سؤالی انتخاب نشده');chooseSubj(sj=>{sel.forEach(q=>{bank.push({id:uid(),t:Date.now(),subj:sj,item:mkItem(q)});put('bank',bank.at(-1))});toast(fa(sel.length)+' سؤال در بانک ذخیره شد');if(T=='bk'){bkChips();bkList()}})}});
+$('#md').addEventListener('change',e=>{const t=e.target;if(t.dataset&&t.dataset.pi!=null)PB[+t.dataset.pi].on=t.checked;else if(t.dataset&&t.dataset.pt!=null){PB[+t.dataset.pt].type=t.value;drawPB()}});
+$('#v').addEventListener('click',e=>{const b=e.target.closest('button');if(b&&b.dataset.a=='bpaste')openPaste()});
+
 // ---------- start
 (async()=>{db=await idb();exams=await all('exams');bank=await all('bank');exams.forEach(migr);bank.forEach(b=>legacy(b.item));ex=exams.find(e=>e.id==localStorage.cur)||exams[0];if(!ex)newExam();else render();navigator.storage?.persist?.();setTimeout(loadDocx,3000);if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js')})();
 </script></body></html>
